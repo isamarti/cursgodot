@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 1: Fonaments i Entorn de Treball | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="godot_rocks" data-lesson-id="lesson1">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya proporcionada pel professor per a accedir a la Lliçó 1.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 1: Fonaments i Entorn de Treball</h1>
+            <p>Benvinguts a la primera sessió del curs.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <p>
+                Abans d'obrir el motor de videojocs, és vital entendre el "perquè" estem ací. Com a docents, no busquem
+                només que l'alumnat "faça un joc", sinó que utilitzem el desenvolupament com una eina pedagògica d'alt
+                nivell.
+            </p>
+
+            <h2>1. Què és realment aprendre a programar?</h2>
+            <p>
+                Segons la nostra experiència a l'aula, i tal com marquen les competències del segle XXI, aprendre a
+                programar no és memoritzar sintaxi, sinó:
+            </p>
+            <ul>
+                <li><strong>Desenvolupar el pensament lògic:</strong> Aprendre a desglossar un problema gran en
+                    xicotetes subtasques resolubles (descomposició).</li>
+                <li><strong>Fomentar la creativitat i la perseverança:</strong> El codi no sempre funciona a la primera.
+                    La "depuració" d'errors entrena la resiliència i el manteniment de l'esforç davant els reptes.</li>
+                <li><strong>Entendre el món digital:</strong> Deixar de ser consumidors passius de tecnologia per a
+                    convertir-nos en creadors, entenent la lògica que hi ha darrere de les pantalles.</li>
+            </ul>
+
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../assets/images/aprendreaprogamar.png" alt="Aprendre a programar esquema"
+                    style="max-width: 100%; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <figcaption style="margin-top: 0.5rem; font-size: 0.9rem; color: #64748b;">Esquema de competències
+                    digitals</figcaption>
+            </figure>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. El Videojoc com a vehicle d'aprenentatge</h2>
+            <p>
+                Per què utilitzar videojocs i no un altre tipus de programari? La resposta és clara: connecten amb
+                l'alumnat. El videojoc és el seu llenguatge natural, i això ens permet:
+            </p>
+            <ul>
+                <li><strong>Aprenentatge significatiu:</strong> L'alumne té un objectiu clar (ex: "vull que l'Aina
+                    salte"). La teoria (física, vectors, variables) s'aprèn perquè es necessita per a crear.</li>
+                <li><strong>Implicació i motivació:</strong> El "feedback" és immediat. Veure el teu personatge moure's
+                    genera una satisfacció que retroalimenta les ganes de seguir aprenent.</li>
+                <li><strong>Projectes multidisciplinaris:</strong> Com veurem, un joc és el nexe perfecte entre les
+                    Arts, les Matemàtiques, la Música i la Narrativa.</li>
+                <li><strong>Talents múltiples:</strong> L'aula es converteix en un estudi real on cada alumne pot
+                    destacar en allò que millor se li dóna (dibuix, guió, programació o disseny de so).</li>
+            </ul>
+
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../assets/images/programarvideojocs.png" alt="Videojocs com aprenentatge"
+                    style="max-width: 100%; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </figure>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Per què necessitem un motor de videojocs?</h2>
+            <p>
+                Moltes vegades, l'alumnat (i fins i tot el professorat) es pregunta: “No podríem programar el joc
+                directament amb codi?”. La resposta és que sí, però seria com voler construir un cotxe fabricant des de
+                zero cada caragol, el motor i els pneumàtics.
+            </p>
+            <p>
+                Un motor de videojocs (o <em>game engine</em>) és un conjunt de ferramentes de programari que ens
+                ofereixen el "esquelet" del joc ja construït. Ens estalvia haver de programar des de zero aspectes
+                complexos com:
+            </p>
+            <ul>
+                <li><strong>El motor físic:</strong> Com cauen els objectes o com rebotan.</li>
+                <li><strong>El renderitzat:</strong> Com es dibuixen les imatges i les llums en la pantalla.</li>
+                <li><strong>La gestió de memòria:</strong> Com es carreguen i esborren els sons i les imatges per a no
+                    col·lapsar l'ordinador.</li>
+            </ul>
+
+            <h3>Un mercat ple d'opcions</h3>
+            <p>Actualment, el mercat ens ofereix un ventall ampli de possibilitats segons les nostres necessitats:</p>
+            <ul>
+                <li>
+                    <strong>Sistemes de "Drag & Drop" (Scratch, GDevelop):</strong> Ideals per a la introducció a la
+                    lògica en nivells inicials, on la prioritat és la implicació i la motivació immediata.
+                </li>
+                <li>
+                    <strong>Motors d'alt rendiment (Unity, Unreal Engine):</strong> Són els gegants de la indústria,
+                    capaços de crear mons 3D hiperrealistes, però amb una corba d'aprenentatge i uns requisits de
+                    hardware que sovint els fan inviables per a l'aula estàndard.
+                </li>
+                <li
+                    style="background-color: rgba(45, 212, 191, 0.1); padding: 0.5rem; border-radius: 0.5rem; border-left: 3px solid var(--accent-color);">
+                    <strong>Godot Engine:</strong> L'equilibri perfecte. Es posiciona com l'eina ideal per a projectes
+                    educatius. És lliure i gratuït , basat en nodes visuals fàcils de comprendre i permet fer el salt
+                    del 2D al 3D quan el projecte ho requerisca.
+                </li>
+            </ul>
+
+            <h3 style="margin-top: 2rem;">📊 Comparativa Tècnica: La tria del motor educatiu</h3>
+            <p>
+                Per a decidir quin motor s'adapta millor a l'aula, hem d'analitzar no només la seua potència gràfica,
+                sinó la seua viabilitat tècnica en un centre educatiu i la corba d'aprenentatge per a l'alumne.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Característica</th>
+                        <th>Scratch</th>
+                        <th>GDevelop</th>
+                        <th>Godot Engine</th>
+                        <th>Unity</th>
+                        <th>Unreal Engine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Nivell ideal</strong></td>
+                        <td>Inicial (ESO)</td>
+                        <td>Intermedi</td>
+                        <td><strong>Secundària / FP</strong></td>
+                        <td>Professional / FP</td>
+                        <td>Professional / AAA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Llenguatge</strong></td>
+                        <td>Blocs visuals</td>
+                        <td>Esdeveniments (No-code)</td>
+                        <td><strong>GDScript (tipus Python)</strong></td>
+                        <td>C# (Complex)</td>
+                        <td>C++ / Blueprints</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Llicència</strong></td>
+                        <td>Gratuït</td>
+                        <td>Open Source</td>
+                        <td><strong>MIT (100% Lliure)</strong></td>
+                        <td>Propietari</td>
+                        <td>Propietari</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arquitectura</strong></td>
+                        <td>Actors i disfresses</td>
+                        <td>Escenes i objectes</td>
+                        <td><strong>Nodes i Escenes</strong></td>
+                        <td>Components i Prefabs</td>
+                        <td>Actors i Blueprints</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hardware</strong></td>
+                        <td>Baix (Web)</td>
+                        <td>Baix / Mitjà</td>
+                        <td><strong>Baix (Portable)</strong></td>
+                        <td>Mitjà / Alt</td>
+                        <td>Molt Alt</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instal·lació</strong></td>
+                        <td>No (Navegador)</td>
+                        <td>Opcional</td>
+                        <td><strong>No (Executable únic)</strong></td>
+                        <td>Complexa (GBs)</td>
+                        <td>Molt Complexa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Especialitat</strong></td>
+                        <td>Lògica bàsica</td>
+                        <td>Jocs 2D ràpids</td>
+                        <td><strong>Excel·lent 2D i 3D</strong></td>
+                        <td>3D i Mobile</td>
+                        <td>3D d'alta gamma</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-section">
+                <h3>💡 Per què Godot és l'elecció guanyadora?</h3>
+                <p>
+                    A partir de l'experiència real a l'aula amb projectes com <a
+                        href="https://isamarti.itch.io/la-paella-del-saber" target="_blank"
+                        style="color: var(--accent-color); font-weight: bold;">"La Paella del Saber"</a> o
+                    <a href="https://isamarti.itch.io/aitana-torrent-el-videojoc" target="_blank"
+                        style="color: var(--accent-color); font-weight: bold;">"Aitana Torrent"</a>, extraiem tres
+                    conclusions clau:
+                </p>
+                <ul>
+                    <li><strong>GDScript:</strong> La seua semblança amb Python fa que l'alumne aprenga una sintaxi neta
+                        i transferible a altres àmbits de la informàtica.</li>
+                    <li><strong>Sistema de Nodes:</strong> La jerarquia visual de Godot (on cada escena pot ser un node)
+                        és la representació més fidel del pensament computacional estructurat.</li>
+                    <li><strong>Inclusió i Rols:</strong> Permet que equips d'alumnes amb diferents talents (dibuixants,
+                        guionistes, programadors) treballen de manera coordinada en un projecte multidisciplinari.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Descàrrega i Configuració</h2>
+            <p>
+                Per als següents passos, necessitarem tindre Godot preparat.
+            </p>
+            <h3>Pas 1: Descàrrega</h3>
+            <p>
+                Aneu a la pàgina oficial <a href="https://godotengine.org/download" target="_blank"
+                    style="color: var(--accent-color);">godotengine.org</a> i descarregueu la versió estàndard.
+            </p>
+
+            <h3>Pas 2: Crear el Projecte "Investigacio"</h3>
+            <ol>
+                <li>Obriu Godot i feu clic a <strong>"New Project"</strong>.</li>
+                <li>Anomeneu el projecte <strong>"Investigacio_Inicial"</strong>.</li>
+                <li>Trieu una carpeta buida.</li>
+                <li>Feu clic a <strong>"Create & Edit"</strong>.</li>
+            </ol>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tasca per a entregar explícitament</h3>
+            <p>
+                Una vegada llegit el contingut i instal·lat el motor:
+            </p>
+            <ol>
+                <li>Fes una captura de pantalla del teu projecte "Investigacio_Inicial" obert.</li>
+                <li>Escriu un document breu explicant amb les teues paraules què entens per "pensament lògic" (basat en
+                    el punt 1).</li>
+                <li>Puja la captura i el PDF a l'Aula Virtual.</li>
+            </ol>
+            <p><strong>Data límit:</strong> La pròxima classe.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>
