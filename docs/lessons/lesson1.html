@@ -221,36 +221,184 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>4. Descàrrega i Configuració</h2>
+            <h2>4. Preparant el motor: Descàrrega i Execució</h2>
             <p>
-                Per als següents passos, necessitarem tindre Godot preparat.
+                Godot Engine destaca per ser una ferramenta portable. Això significa que no necessita un procés
+                d'instal·lació complex que requerisca permisos d'administrador, la qual cosa facilita enormement el seu
+                ús en els ordinadors dels centres educatius.
             </p>
-            <h3>Pas 1: Descàrrega</h3>
-            <p>
-                Aneu a la pàgina oficial <a href="https://godotengine.org/download" target="_blank"
-                    style="color: var(--accent-color);">godotengine.org</a> i descarregueu la versió estàndard.
-            </p>
+            <ul>
+                <li><strong>Descàrrega:</strong> Accedeix a la secció de descàrregues de la <a
+                        href="https://godotengine.org/download" target="_blank" style="color: var(--accent-color);">web
+                        oficial de Godot Engine</a>. Tria la versió estable de Godot 4.x.</li>
+                <li><strong>Execució:</strong> Un cop descarregat el fitxer .zip, descomprimeix-lo. Només has de fer
+                    doble clic sobre l'executable per a obrir el motor.</li>
+                <li><strong>Primer pas:</strong> En obrir-lo, veuràs el Project Manager. Ací és on crearem el nostre
+                    projecte prement el botó "New".</li>
+                <li><strong>Crea el projecte:</strong> Assigna un nom al teu projecte i selecciona la carpeta on
+                    desitges guardar-lo. Punxa en "Create". </li>
+            </ul>
+        </section>
 
-            <h3>Pas 2: Crear el Projecte "Investigacio"</h3>
-            <ol>
-                <li>Obriu Godot i feu clic a <strong>"New Project"</strong>.</li>
-                <li>Anomeneu el projecte <strong>"Investigacio_Inicial"</strong>.</li>
-                <li>Trieu una carpeta buida.</li>
-                <li>Feu clic a <strong>"Create & Edit"</strong>.</li>
-            </ol>
+        <section class="card animate-on-load">
+            <h2>5. L'Espai de Treball: Anatomia de Godot</h2>
+            <p>
+                Quan obrim un projecte nou, ens trobem amb la interfície principal. Està dissenyada per a tindre tot el
+                que necessitem a un colp de vista, dividida en quatre zones fonamentals:
+            </p>
+            <figure style="margin: 2rem 0; text-align: center;">
+                <img src="../assets/images/entorn.png" alt="Interfície de Godot"
+                    style="width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <figcaption style="margin-top: 0.5rem; color: #64748b; font-size: 0.9rem;">L'entorn de treball de Godot
+                    4</figcaption>
+            </figure>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+
+                <!-- A. Scene Dock -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">A</span>
+                        El Tauler d'Escena
+                    </h3>
+                    <p><strong>(Dalt a l'esquerra)</strong> Aquí és on veurem la jerarquia de l'escena actual. És
+                        l'arbre on s'organitzen els nodes (les nostres peces de LEGO).</p>
+                    <p style="font-size: 0.9rem; color: #475569;">El que estiga dalt de tot és el "pare" i els que
+                        pengen d'ell són els "fills".</p>
+                </div>
+
+                <!-- B. Viewport -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">B</span>
+                        El Visualitzador
+                    </h3>
+                    <p><strong>(Al centre)</strong> És la nostra finestra al món del joc. Aquí és on col·loquem
+                        visualment els personatges i escenaris.</p>
+                    <p style="font-size: 0.9rem; color: #475569;">Podem canviar entre la vista 2D, 3D i l'editor de
+                        Scripts (codi) amb els botons superiors centrals.</p>
+                </div>
+
+                <!-- C. Inspector -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">C</span>
+                        L'Inspector
+                    </h3>
+                    <p><strong>(A la dreta)</strong> Aquest és el panell de control de cada peça. Quan selecciones un
+                        node a l'esquerra, aquí apareixeran totes les seues propietats (posició, imatges, velocitat,
+                        etc.).</p>
+                    <p style="font-size: 0.9rem; color: #475569;">Com a docents, aquí és on podrem modificar paràmetres
+                        sense tocar ni una línia de codi.</p>
+                </div>
+
+                <!-- D. FileSystem -->
+                <div
+                    style="background: rgba(13, 148, 136, 0.05); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--accent-color);">
+                    <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span
+                            style="background: var(--accent-color); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.8rem;">D</span>
+                        El Sistema de Fitxers
+                    </h3>
+                    <p><strong>(Baix a l'esquerra)</strong> És l'explorador de carpetes del nostre projecte. Aquí
+                        guardarem les nostres imatges (assets), els nostres codis (scripts) i les nostres escenes.</p>
+                    <p style="font-size: 0.9rem; color: #475569;">És vital mantindre aquesta zona neta i organitzada des
+                        del primer dia.</p>
+                </div>
+
+            </div>
+
+            <!-- E. Bottom Panel -->
+            <div
+                style="margin-top: 2rem; background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                <h3 style="margin-top: 0; display: inline-block; margin-right: 0.5rem;">E. El Panell Inferior</h3>
+                <span style="color: #64748b;">A baix del tot</span>
+                <p style="margin-bottom: 0;">Aquí trobarem eines que usarem més endavant, com la Consola d'eixida (per a
+                    vore errors), el Depurador o l'editor d'Animacions.</p>
+            </div>
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px dashed #cbd5e1;">
+                <h3 style="color: var(--accent-color); display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📍</span> El Sistema de Coordenades i la Pantalla Visible
+                </h3>
+                <p>Quan mirem el Visualitzador (Viewport) central, hem d'entendre com es posicionen els objectes en
+                    aquest món digital.</p>
+
+                <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">El Rectangle Morat: El teu escenari
+                </h4>
+                <p>Dins de l'espai infinit de Godot, veureu un rectangle amb una línia morada (o blava, segons la
+                    configuració).</p>
+                <div
+                    style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #6366f1; margin: 1rem 0;">
+                    <p style="margin: 0; font-weight: 600;">Aquest rectangle representa el que el jugador realment veurà
+                        en la seua pantalla en executar el joc.</p>
+                </div>
+                <p>Tot el que estiga fora d'aquest rectangle romandrà ocult per al jugador fins que la càmera es moga.
+                </p>
+
+                <h4 style="color: var(--secondary-color); margin-top: 2rem; margin-bottom: 0.5rem;">Les Regles del
+                    Plànol 2D</h4>
+                <p>A diferència del que aprenem a classe de matemàtiques, les coordenades en el desenvolupament de
+                    videojocs funcionen així:</p>
+                <ul style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        <strong>El Punt (0,0):</strong> L'origen de coordenades es troba exactament a la cantonada
+                        <em>superior esquerra</em> del rectangle morat.
+                    </li>
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        <strong>L'Eix X (Horitzontal):</strong> Les X creixen cap a la dreta. <span
+                            style="color: #64748b;">(Igual que a mates)</span>
+                    </li>
+                    <li
+                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; border-left: 4px solid #ef4444;">
+                        <strong>L'Eix Y (Vertical):</strong> Aquí està el canvi clau: <strong>les Y creixen cap
+                            avall</strong>. Si vols que un personatge caiga, hauràs d'augmentar la seua Y; si vols que
+                        salte, hauràs de restar valor a la seua Y.
+                    </li>
+                </ul>
+            </div>
         </section>
 
         <!-- TASCA PER A L'ALUMNAT -->
         <section class="card animate-on-load task-box">
-            <h3>📝 Tasca per a entregar explícitament</h3>
+            <h3>📝 Tasca per a entregar</h3>
             <p>
-                Una vegada llegit el contingut i instal·lat el motor:
+                Una vegada creat el teu projecte, anem a configurar-lo per a quetinga una estètica de 16 bits impecable
+                i no presente problemes de visualització.
             </p>
+            <p>
+                Obre "Project Settings" al menú projecte i configura les següents opcions:
+            </p>
+            <ul>
+                <li>Resolució de la finestra: Ves a Project > Project Settings > Display > Window. Configura el Viewport
+                    Width a 1152 i el Viewport Height a 648.</li>
+                <li>Stretch Mode: En la mateixa secció de Window, baixa fins a Stretch i selecciona Mode: canvas_items i
+                    Aspect: keep. Això evitarà que el joc es deforme en pantalles de diferents mides.</li>
+                <li>Filtre de Textures (Pixel Art): Perquè els píxels es vegen nítids (i no borrosos), ves a Rendering >
+                    Textures i canvia el Default Texture Filter a Nearest.</li>
+            </ul>
+            <p>
+                Abans de començar a crear nodes, és imprescindible establir un ordre en el panell FileSystem. Com a bons
+                enginyers, no volem que els nostres recursos estiguen barrejats:
+            </p>
+            <ul>
+                <li>Crea una carpeta per a les escenes (<code>scenes/</code>).</li>
+                <li>Crea una carpeta per al codi (<code>scripts/</code>).</li>
+                <li>Crea una carpeta per als recursos gràfics i sonors (<code>assets/</code>).</li>
+            </ul>
             <ol>
-                <li>Fes una captura de pantalla del teu projecte "Investigacio_Inicial" obert.</li>
-                <li>Escriu un document breu explicant amb les teues paraules què entens per "pensament lògic" (basat en
-                    el punt 1).</li>
-                <li>Puja la captura i el PDF a l'Aula Virtual.</li>
+                <li>Fes una captura de pantalla de les diferents configuracions que has realitzat.</li>
+                <li>Fes una captura de pantalla del teu projecte obert, amb les carpetes que has creat. </li>
+                <li>Escriu un document breu explicant amb les teues paraules com creus que el desenvolupament de
+                    videojocs pot ajudar el nostre alumnar a desenvolupar el "pensament lògic" .</li>
+                <li>Puja la captura i el document a l'Aula Virtual.</li>
             </ol>
             <p><strong>Data límit:</strong> La pròxima classe.</p>
         </section>

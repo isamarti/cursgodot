@@ -1,1 +1,0 @@
-This folder mimics where you would put video assets.

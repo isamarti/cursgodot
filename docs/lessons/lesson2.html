@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 2: Nodes, Escenes i el Primer Enemic | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="node_master" data-lesson-id="lesson2">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 2.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 2:L'Arquitectura de Godot i el nostre primer Enemic</h1>
+            <p>En aquesta lliçó entendrem com es construeix realment un videojoc en Godot. Deixarem de banda la
+                configuració i començarem a col·locar les primeres peces del nostre món digital.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Conceptes Fonamentals: Els Nodes</h2>
+            <p>
+                Si imaginem que el nostre videojoc és una construcció de LEGO, els <strong>Nodes</strong> són les peces
+                individuals (un rectangle de 2x4, una roda, una finestra). Cada node té una funció específica: mostrar
+                una imatge, reproduir un so o detectar una col·lisió.
+            </p>
+            <p>
+                Un node té tres característiques que el fan únic:
+            </p>
+            <ul>
+                <li>Té un nom: (ex: "Enemic").</li>
+                <li>Té propietats editables: (ex: "Posició").</li>
+                <li>Rep actualitzacions en cada fotograma: (el motor li diu constantment "actua!")</li>
+                <li>Es pot extendre amb noves propietats i funcions.</li>
+                <li>Es pot connectar amb altres nodes per a realitzar accions.</li>
+            </ul>
+            <p>
+                Anem a crear el nostre primer node per veure com funciona i començar a crear el nostre primer
+                personatge, un enemic.
+            </p>
+            <h3>Per a crear personatges començarem amb un CharacterBody2D</h3>
+            <ol>
+                <li>Al panell d'Escenes, prem el botó <strong>+ (New Scene)</strong>.</li>
+                <li>Elegeix "Other Node" i busca <strong>CharacterBody2D</strong>. Fes doble clic per crear-lo.</li>
+                <li>Fixa't en el panell de l'<strong>Inspector</strong> a la dreta. Aquí pots veure i editar totes les
+                    propietats del node.</li>
+            </ol>
+            <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; align-items: flex-start;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="../assets/images/inspector.png" alt="Inspector de Godot"
+                        style="width: 100%; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <p><strong>L'Inspector</strong> (a la dreta de l'editor) és on personalitzem cada peça. Qualsevol
+                        canvi que fem aquí s'emmagatzema en el fitxer de l'escena. Depenent del tipus de node, trobarem
+                        unes característiques o altres. </p>
+                    <p>Algunes de les característiques més importants del CharacterBody2D són:</p>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem; margin-top: 1rem;">A. Secció
+                        "CharacterBody2D" (La lògica física)</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Aquí és on configurem com es comporta el cos de
+                        l'enemic davant el món:</p>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Motion Mode:</strong> Si el posem en <em>Grounded</em>, el motor l'entendrà com un
+                            personatge que camina per terra (amb gravetat). Si el posem en <em>Floating</em>, serà per a
+                            enemics que volen o naden (com el geni o la bruixa dels teus exemples).</li>
+                        <li><strong>Slide On Ceiling:</strong> Una opció per a decidir si llisca o para quan xoca amb un
+                            sostre.</li>
+                    </ul>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">B. Secció "Transform" (L'ànima
+                        matemàtica)</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Com hem vist, tots els nodes 2D tenen aquesta
+                        secció. És vital per a la programació:</p>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Position:</strong> Les coordenades on es troba. Recorda: si canvies la <em>X</em> a
+                            l'Inspector, l'enemic es mou a la dreta.</li>
+                        <li><strong>Scale:</strong> Ací és on canviaràs la mida si les teues imatges són massa grans o
+                            menudes (ex: 2, 2).</li>
+                        <li><strong>Rotation:</strong> Útil per si vols que l'enemic estiga inclinat o caigut.</li>
+                    </ul>
+
+                    <h4 style="color: var(--accent-color); margin-bottom: 0.5rem;">C. Secció "Collision" (Les fronteres)
+                    </h4>
+                    <ul style="font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <li><strong>Layer (Capa):</strong> En quina capa està el meu enemic? (Ex: Capa 2).</li>
+                        <li><strong>Mask (Màscara):</strong> Quines capes "mira" l'enemic per a no travessar-les? (Ex:
+                            Capa 1, on està el terra).</li>
+                    </ul>
+
+
+                </div>
+            </div>
+
+            <div
+                style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--secondary-color); padding: 1.5rem; margin-top: 2rem; border-radius: 0.5rem;">
+                <h4
+                    style="color: var(--secondary-color); margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🎮</span> Com interactuar amb l'Inspector des del Codi?
+                </h4>
+                <p style="font-size: 0.95rem;">Més endavant veurem la creació de codi, però qualsevol paraula que veieu
+                    a l'Inspector pot ser controlada per l'script.</p>
+                <p style="font-size: 0.95rem;">Si volem que l'enemic es moga, escriurem:</p>
+                <pre
+                    style="background: #1e293b; color: #f8fafc; padding: 0.8rem; border-radius: 0.4rem; font-family: monospace; font-size: 0.9rem; overflow-x: auto;"><code>velocity.x = 100</code></pre>
+                <p style="font-size: 0.95rem; margin-bottom: 0;">I si volem que una propietat nova del node aparega a
+                    l'Inspector per poder canviar-la fàcilment sense entrar al codi, usarem la paraula màgica <code
+                        style="background: rgba(16, 185, 129, 0.2); padding: 0.2rem 0.4rem; border-radius: 0.2rem; color: var(--secondary-color);">@export</code>
+                    a la definició.</p>
+            </div>
+
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. L'Escena: Més que un nivell, un "Sub-muntatge"</h2>
+            <p>
+                En molts motors de jocs, una "escena" es refereix només a un nivell (el bosc, el castell). En Godot, una
+                <strong>escena</strong> és qualsevol conjunt de nodes que tinga sentit per si mateix.
+            </p>
+
+            <h3 style="color: var(--accent-color); display: flex; align-items: center; gap: 0.5rem;">
+                <span>🧩</span> El símil del LEGO: La Pota i l'Animal
+            </h3>
+            <p>
+                Imagineu que volem construir un animal de LEGO complex. No intentarem posar totes les peces (nodes) en
+                una sola pila gegant. En lloc d'això, treballarem de forma modular:
+            </p>
+            <ul style="margin-bottom: 2rem;">
+                <li><strong>Creem una Escena "Pota":</strong> Ajuntem unes quantes peces (un node de moviment, un de
+                    gràfics per a l'ungla, un per a l'os). Guardem aquest muntatge com a <code>pota.tscn</code>.</li>
+                <li><strong>L'Escena és independent:</strong> Podem provar la pota tota sola, fer que es moga o
+                    canviar-li el color. Funciona de manera autònoma.</li>
+                <li><strong>Instanciar (Cridar l'escena):</strong> Quan anem a crear l'escena "Animal", no tornem a
+                    construir les potes des de zero. Simplement "instanciem" (arrosseguem) l'escena
+                    <code>pota.tscn</code> quatre vegades dins de l'animal.
+                </li>
+            </ul>
+
+            <div
+                style="background: linear-gradient(to right, rgba(13, 148, 136, 0.1), rgba(5, 150, 105, 0.1)); padding: 1.5rem; border-radius: 0.5rem; border: 1px solid var(--glass-border); margin-bottom: 2rem;">
+                <h4 style="margin-top: 0; color: var(--accent-color);">🚀 Per què això és "màgic" per al flux de
+                    treball?</h4>
+                <p><strong>Actualització en cadena:</strong> Si un cop acabat l'animal decidim que les ungles han de ser
+                    blaves, no cal canviar les quatre potes una a una. Anem a l'escena original de la pota, canviem el
+                    color de l'ungla, i automàticament totes les potes de tots els animals del joc s'actualitzaran.</p>
+                <p style="margin-bottom: 0;"><strong>Ordre i neteja:</strong> L'escena de l'animal es veu neta (només té
+                    4 "instàncies" de pota) en lloc de tenir 50 peces soltes. És una de les característiques bàsiques de
+                    la programació orientada a objectes,<strong>l'Encapsulament</strong>.
+                </p>
+            </div>
+
+            <h3 style="color: var(--accent-color);"> L'Arbre de Nodes (The Scene Tree)</h3>
+            <p>
+                Dissenyar l'Arbre de Nodes és, en realitat, dissenyar la jerarquia lògica del nostre "animal". Els nodes
+                s'organitzen en una relació de <strong>Pare-Fill</strong>:
+            </p>
+            <ul>
+                <li><strong>L'Arrel (Root):</strong> És el node "cap" de l'escena. Si movem el pare (el cos de
+                    l'animal), tots els fills (les potes instanciades) es mouen amb ell de forma solidària.</li>
+                <li><strong>Herència de Propietats:</strong> Si el pare escala al doble de mida, les potes es fan el
+                    doble de grans automàticament.</li>
+                <li><strong>Especialització:</strong> Com a docents, ensenyem a l'alumne a triar la peça correcta. Per
+                    exemple, si la
+                    pota ha de fer soroll en caminar, li afegirem un node fill de tipus <code>AudioStreamPlayer</code>.
+                </li>
+            </ul>
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
+                💡 <strong>Reflexió per a l'aula</strong><br>
+                "Godot ens permet treballar com un estudi real: un alumne pot estar dissenyant l'escena de la 'Pota', un
+                altre la de la 'Cua' i un altre la del 'Cap'. Al final, només hem d'ajuntar les escenes per a donar vida
+                a l'animal sencer. Això facilita el treball en equip i la correcció de projectes."
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. 📜 Fonaments de GDScript: El "Manual d'Instruccions"</h2>
+            <p>
+                <strong>GDScript</strong> és un llenguatge d'alt nivell dissenyat específicament per a Godot. La seua
+                principal virtut a l'aula és la seua claredat visual: s'utilitza la indentació (espais) per a definir
+                blocs de codi, el que ajuda l'alumnat a estructurar el seu pensament.
+            </p>
+
+            <h3 style="color: var(--accent-color);">1. Variables i la "Màgia" de l'Inspector (@export)</h3>
+            <p>
+                Les variables són contenidors d'informació. En Godot, tenim un superpoder docent: la paraula clau
+                <code>@export</code>.
+            </p>
+            <ul>
+                <li><strong>Variables estàndard:</strong> Es queden dins del codi (ex: <code>var vida = 100</code>).
+                </li>
+                <li><strong>Variables Exportades:</strong> Si escrivim <code>@export var velocitat = 200</code>, aquesta
+                    variable apareixerà a l'Inspector de Godot.</li>
+            </ul>
+            <div class="highlight-quote"
+                style="margin-top: 1rem; border-left-color: var(--secondary-color); background: rgba(16, 185, 129, 0.05);">
+                <strong>Utilitat pedagògica:</strong> Permet que un alumne ajuste la dificultat del joc (més velocitat,
+                menys vida) des de la interfície visual, sense por a "trencar" el codi.
+            </div>
+
+            <h3 style="color: var(--accent-color); margin-top: 2rem;">2. Les Funcions "Callback" (Portes d'entrada)</h3>
+            <p>Godot ens dona unes funcions especials que s'executen en moments concrets de la vida del node:</p>
+            <ul>
+                <li><code>func _ready():</code> S'executa una sola vegada quan el node entra en escena (en "nàixer"). És
+                    on fem les configuracions inicials.</li>
+                <li><code>func _process(delta):</code> És el bucle principal que s'executa en cada fotograma (unes 60
+                    vegades per segon). Aquí és on escrivim el moviment constant.</li>
+            </ul>
+
+            <h3 style="color: var(--accent-color); margin-top: 2rem;">3. El concepte de delta (Física i Temps)</h3>
+            <p>Aquesta és una de les lliçons més importants per a l'alumnat.</p>
+            <ul>
+                <li><strong>Què és?</strong> <code>delta</code> és el temps que ha passat des de l'últim fotograma.</li>
+                <li><strong>Per què serveix?</strong> Si movem un enemic 100 píxels en cada fotograma, en un ordinador
+                    ràpid anirà com un coet i en un vell anirà lent.</li>
+                <li><strong>La solució:</strong> Multipliquem sempre la velocitat per <code>delta</code>. Així, el
+                    moviment és independent de la potència de l'ordinador.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Creant el Primer Enemic: El Blob</h2>
+            <p>
+                Anem a posar-ho en pràctica creant el nostre primer personatge: un enemic blob.
+            </p>
+            <h3>Pas 1: Crear l'Escena</h3>
+            <ol>
+                <li>Al panell d'Escenes, prem el botó <strong>+ (New Scene)</strong>.</li>
+                <li>Tria <strong>Other Node</strong> i busca <code>CharacterBody2D</code>. Aquest node és ideal per a
+                    personatges que es mouen i xoquen.</li>
+                <li>Canvia-li el nom a <code>Blob</code> (fent doble clic).</li>
+                <li>Guarda l'escena (Ctrl+S) dins de la carpeta <code>scenes/</code> com <code>blob.tscn</code>.</li>
+            </ol>
+
+            <h3>Pas 2: Afegir la Imatge (Sprite)</h3>
+            <ol>
+                <li>Descarrega aquesta imatge del blob i emmagatzema-la a la carpeta <code>assets/</code>:<br>
+                    <img src="../assets/images/blob.png" alt="Blob"
+                        style="max-width: 100px; display: block; margin: 0.5rem 0; border: 1px solid #ddd; padding: 5px; background: white; border-radius: 4px;">
+                </li>
+                <li>Fes clic dret sobre el node <code>Blob</code> i selecciona <strong>Add Child Node</strong>.</li>
+                <li>Busca <code>Sprite2D</code> i crea'l.</li>
+                <li>A l'Inspector (dreta), arrossega la imatge <code>blob.png</code> que acabes de guardar a la
+                    propietat <strong>Texture</strong>.
+                </li>
+                <li>(Opcional) Si és Pixel Art, recorda ajustar l'escala o el filtre si no ho has fet als ajustos
+                    globals.</li>
+            </ol>
+
+            <h3>Pas 3: Afegir la Col·lisió</h3>
+            <p>Veuràs una alerta ⚠️ al node <code>CharacterBody2D</code>. Ens diu que li falta una forma de col·lisió.
+            </p>
+            <ol>
+                <li>Afig un altre node fill a <code>Blob</code> tipus <code>CollisionShape2D</code>.</li>
+                <li>A l'Inspector, a la propietat <strong>Shape</strong>, selecciona <strong>New
+                        CircleShape2D</strong> o la forma que millor penses s'adapta al blob.</li>
+                <li>Ajusta la mida per a que cobrisca l'sprite.</li>
+            </ol>
+            <p>
+                Ara, si prems <strong>F6 (Play Scene)</strong>, veuràs el teu Blob quiet en la cantonada superior
+                esquerra de la pantalla. Això és perquè la seua posició (0,0) coincideix amb l'origen de coordenades.
+            </p>
+            <div style="margin-top: 1rem; text-align: center;">
+                <video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <source src="../assets/videos/lesson2_video1.mp4" type="video/mp4">
+                    El teu navegador no suporta l'etiqueta de vídeo.
+                </video>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. Animant en 4 Direccions i Moviment Autònom</h2>
+            <p>
+                Ara farem que el nostre Blob tinga vida pròpia, d'aquesta forma el blob es moura lliurement per la
+                pantalla.
+            </p>
+
+            <h3>Pas 1: Preparar els Sprites</h3>
+            <p>Descarrega les 4 imatges per a les direccions i guarda-les a la carpeta corresponent:</p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <div style="text-align: center;">
+                    <img src="../assets/images/blob_front.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../assets/images/blob_front.png" download>Front</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../assets/images/blob_back.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../assets/images/blob_back.png" download>Back</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../assets/images/blob_left.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../assets/images/blob_left.png" download>Left</a></small>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../assets/images/blob_right.png"
+                        style="width: 50px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;">
+                    <br><small><a href="../assets/images/blob_right.png" download>Right</a></small>
+                </div>
+            </div>
+
+            <h3>Pas 2: Crear les Animacions amb AnimatedSprite2D</h3>
+            <ol>
+                <li> Com que volem animacions senzilles, usarem un node
+                    específic per a això. Esborra el node <code>Sprite2D</code> i afig un node
+                    <strong>AnimatedSprite2D</strong> com a fill de <code>Blob</code>.
+                </li>
+                <li>A l'Inspector, on posa <strong>Sprite Frames</strong>, tria <strong>New SpriteFrames</strong>.
+                </li>
+                <li>Fes clic sobre la paraula <code>SpriteFrames</code> que acaba d'aparèixer per a obrir el panell
+                    inferior d'animació.</li>
+                <li><strong>Important:</strong> Canvia el nom de l'animació per defecte (<code>default</code>) a
+                    <code>walk_down</code> (fent doble clic).
+                </li>
+                <li>Prem la icona de "Reixeta" (Add frames from Sprite Sheet) <span style="font-size: 1.2rem;">▦</span>.
+                </li>
+                <li>Selecciona <code>blob_front.png</code>. Configura <strong>Horizontal: 2</strong> i
+                    <strong>Vertical:
+                        2</strong>.
+                </li>
+                <li>Selecciona els 4 fotogrames i prem <strong>Add 4 Frames</strong>.</li>
+                <li>Repeteix el procés creant noves animacions (botó de foli amb +) per a:
+                    <ul>
+                        <li><code>walk_up</code> (amb blob_back.png)</li>
+                        <li><code>walk_left</code> (amb blob_left.png)</li>
+                        <li><code>walk_right</code> (amb blob_right.png)</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Pas 3: El Codi de Moviment Aleatori</h3>
+            <p>Per a crear el codi per a que camine, selecciona el node CharacterBody2D i prem la icona de <img
+                    src="../assets/images/script_icon.png"
+                    style="vertical-align: middle; width: 20px; height: 20px; margin: 0 4px;" alt="Nou Script"> per a
+                crear un script <code>blob.gd</code>:
+            </p>
+            <pre><code class="language-gdscript">extends CharacterBody2D
+
+@export var speed = 50
+var movement_direction = Vector2.ZERO
+
+func _ready():
+    # Triem una direcció aleatòria al començar
+    choose_new_direction()
+
+func _physics_process(delta):
+    # Movem el personatge
+    velocity = movement_direction * speed
+    move_and_slide()
+    
+    # Actualitzem l'animació segons la direcció usant AnimatedSprite2D
+    if velocity.length() > 0:
+        if abs(velocity.x) > abs(velocity.y):
+            if velocity.x > 0:
+                $AnimatedSprite2D.play("walk_right")
+            else:
+                $AnimatedSprite2D.play("walk_left")
+        else:
+            if velocity.y > 0:
+                $AnimatedSprite2D.play("walk_down")
+            else:
+                $AnimatedSprite2D.play("walk_up")
+
+func choose_new_direction():
+    # Generem un vector aleatori (dalt, baix, esquerra, dreta o diagonals)
+    movement_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
+    
+    # Tornem a canviar de direcció d'ací entre 2 i 3 segons
+    await get_tree().create_timer(randf_range(2.0, 3.0)).timeout
+    choose_new_direction()
+</code></pre>
+            <div style="margin-top: 1rem; text-align: center;">
+                <video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <source src="../assets/videos/lesson2_video3.mp4" type="video/mp4">
+                    El teu navegador no suporta l'etiqueta de vídeo.
+                </video>
+            </div>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tasca</h3>
+            <p>
+                Has de crear l'escena del teu primer enemic seguint els passos anteriors.
+            </p>
+            <ol>
+                <li>Crea l'escena completa amb AnimatedSprite2D i CollisionShape2D.</li>
+                <li>Comprimeix el teu projecte</li>
+                <li>Puja l'arxiu comprimit a l'Aula Virtual.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>
