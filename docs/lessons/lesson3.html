@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 3: Moviment del Jugador i Animacions Complexes | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="input_master" data-lesson-id="lesson3">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 3.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 3: Control Total i Animacions Complexes</h1>
+            <p>En aquesta lliçó farem que el jugador prenga el control. Aprendrem a abstreure les entrades de teclat i
+                ratolí
+                per a fer el codi més net i robust, i utilitzarem eines professionals d'animació per a donar vida al
+                nostre protagonista.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Abstracció d'Entrades: L'Input Map</h2>
+            <p>
+                Fins ara, hem vist com el motor mou objectes de forma automàtica (com l'enemic). Però, com fem que
+                el nostre personatge responga a les nostres ordres?
+
+                El primer impuls d'un programador principiant seria escriure una instrucció que diga: "Si es prem la
+                tecla W, mou el personatge cap amunt". No obstant això, en el desenvolupament professional de videojocs
+                fem servir un concepte més intel·ligent anomenat Abstracció mitjançant l'Input Map (Mapa d'Entrades).
+            </p>
+
+            <h3>Per què no fem servir tecles directament?</h3>
+            <p>
+                Imagineu que un alumne vol jugar amb les fletxes del teclat, un altre amb les tecles WASD i un altre amb
+                un comandament de consola. Si haguérem programat la tecla "W" directament, el joc només funcionaria per
+                al primer alumne.
+            </p>
+            <h3>La solució: Crear "Accions"</h3>
+            <p>
+                En lloc de preguntar "s'ha premut la tecla W?", preguntarem "s'ha realitzat l'acció de moure's amunt?".
+                Això és una <strong>abstracció</strong>.
+            </p>
+            <ol>
+                <li>Creem l'acció anomenada "up".</li>
+                <li>Dins de la configuració de Godot, li diem que aquesta acció s'activa si es prem la "W", la "Fletxa
+                    Amunt" o el "Stick del comandament".</li>
+                <li>Al nostre codi, només preguntarem: "S'ha realitzat l'acció 'up'?".</li>
+            </ol>
+            <h3>Configurant l'Input Map</h3>
+            <ol>
+                <li>Ves al menú <strong>Project > Project Settings</strong>.</li>
+                <li>Selecciona la pestanya <strong>Input Map</strong>.</li>
+                <li>A la barra "Add New Action", escriu el nom de l'acció. Per a aquest curs usarem els noms:
+                    <ul>
+                        <li><code>up</code></li>
+                        <li><code>down</code></li>
+                        <li><code>left</code></li>
+                        <li><code>right</code></li>
+                    </ul>
+                </li>
+                <li>Prem <strong>Add</strong> per a crear cada acció.</li>
+                <li>Al costat de cada acció nova, prem el botó <strong>+</strong> per a assignar-li una tecla o botó.
+                </li>
+                <li>Prem la tecla que vulgues (ex: W per a <code>up</code>) i prem OK. Pots afegir múltiples tecles per
+                    a una mateixa acció (ex: W i Fletxa Amunt).</li>
+            </ol>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/inputmap.png" alt="Configuració de l'Input Map en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-quote">
+                💡 <strong>Nota Pedagògica:</strong> Aquest concepte és fonamental en informàtica. Separem la "intenció"
+                (voler moure's) de la "implementació" (prémer la tecla W). Això fa que el nostre programari siga més
+                flexible i adaptable.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Creant el Personatge Principal (Player)</h2>
+            <p>
+                Igual que vam fer amb l'enemic, crearem una escena per al jugador.
+            </p>
+            <ol>
+                <li>Crea una nova escena i tria <strong>CharacterBody2D</strong> com a arrel. Anomena'l
+                    <code>Player</code>.
+                </li>
+                <li>Afig un <strong>CollisionShape2D</strong> i defineix la seua forma (normalment una càpsula o
+                    rectangle als peus).</li>
+                <li>Guarda l'escena com <code>player.tscn</code> a la carpeta <code>scenes/</code>.</li>
+            </ol>
+            <p>
+                Per a la imatge, aquesta vegada no usarem un simple <code>Sprite2D</code> ni un
+                <code>AnimatedSprite2D</code> bàsic, sinó alguna cosa més potent.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. AnimationPlayer i AnimationTree</h2>
+            <p>
+                Per a personatges complexos amb molts estats (caminar, córrer, atacar, saltar, rebre dany...),
+                l'<code>AnimatedSprite2D</code> es queda curt. Necessitem un sistema que gestione les transicions entre
+                animacions de manera fluida.
+            </p>
+
+            <h3>Pas 1: Sprite Sheet i AnimationPlayer</h3>
+            <ol>
+                <li>Afig un node <strong>Sprite2D</strong> al teu <code>Player</code>.</li>
+                <li>Carrega una "Sprite Sheet" (un full amb tots els fotogrames del personatge) a la propietat
+                    <strong>Texture</strong>. Assegura't de configurar <strong>Hframes</strong> i
+                    <strong>Vframes</strong> segons quantes files i columnes tinga la teua imatge.
+                </li>
+                <li>Afig un node <strong>AnimationPlayer</strong>. Aquest node és el "director d'orquestra" que controla
+                    quins fotogrames es mostren i quan.</li>
+                <li>Al panell <strong>Animation</strong> (a baix), crea les noves animacions: <code>idle_down</code>,
+                    <code>walk_down</code>, <code>walk_up</code>, etc.
+                </li>
+                <li>Per a cada animació:
+                    <ul>
+                        <li>Defineix la durada (ex: 0.8 segons).</li>
+                        <li>Prem la clau al costat de la propietat <strong>Frame</strong> de l'Sprite2D per a gravar els
+                            fotogrames clau en la línia de temps.</li>
+                        <li>Activa l'opció de bucle (loop) si és una animació que es repeteix (com caminar).</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Pas 2: AnimationTree (La Màquina d'Estats)</h3>
+            <p>
+                Ara crearem una <strong>Màquina d'Estats Finits (FSM)</strong>. Això vol dir que el personatge estarà en
+                un "Estat" en cada moment (ex: ESTAT_QUIET o ESTAT_CAMINANT) i definirem com passa d'un a l'altre.
+            </p>
+            <ol>
+                <li>Afig un node <strong>AnimationTree</strong> al <code>Player</code>.</li>
+                <li>Assigna-li l'<code>AnimationPlayer</code> que has creat abans.</li>
+                <li>A <strong>Tree Root</strong>, selecciona <strong>New AnimationNodeStateMachine</strong>.</li>
+                <li>Activa la casella <strong>Active</strong>.</li>
+            </ol>
+
+            <p>
+                Ara voràs un graf on pots crear "nodes". Fes clic dret al graf per afegir un
+                <strong>BlendSpace2D</strong>.
+            </p>
+            <ul>
+                <li>Crea un BlendSpace2D i anomena'l <code>Idle</code>. Fes doble clic per entrar. Afig punts per a les
+                    animacions de <code>idle_left</code>, <code>idle_right</code>, <code>idle_up</code>,
+                    <code>idle_down</code> en el pla cartesià 2D.
+                </li>
+                <li>Torna arrere i crea un altre BlendSpace2D anomenat <code>Walk</code>. Repeteix el procés amb les
+                    animacions de caminar.</li>
+                <li>Connecta el node <code>Start</code> a <code>Idle</code>.</li>
+                <li>Connecta <code>Idle</code> amb <code>Walk</code> i viceversa. Aquestes fletxes són les transicions.
+                </li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. El Codi: Ajuntant-ho tot</h2>
+            <p>
+                Finalment, donarem vida a tot això amb un script en el node <code>Player</code>.
+            </p>
+            <pre><code class="language-gdscript">extends CharacterBody2D
+
+@export var speed = 100
+@onready var animation_tree = $AnimationTree
+@onready var state_machine = animation_tree.get("parameters/playback")
+
+func _physics_process(delta):
+    # Obtenim la direcció usant les accions de l'Input Map
+    # get_vector retorna un vector normalitzat (longitud 1) basat en les 4 tecles
+    var input_direction = Input.get_vector("left", "right", "up", "down")
+    
+    # Actualitzem la velocitat
+    velocity = input_direction * speed
+    
+    # Gestionem les animacions
+    if input_direction != Vector2.ZERO:
+        # Si ens movem, informem al BlendSpace de la nostra direcció
+        animation_tree.set("parameters/Idle/blend_position", input_direction)
+        animation_tree.set("parameters/Walk/blend_position", input_direction)
+        
+        # Viatgem a l'estat "Walk"
+        state_machine.travel("Walk")
+    else:
+        # Si estem quiets, viatgem a l'estat "Idle"
+        state_machine.travel("Idle")
+
+    move_and_slide()
+            </code></pre>
+            <p>
+                Fixa't com de net queda el codi gràcies a l'<code>AnimationTree</code>. No hem de dir-li "reprodueix
+                l'animació walk_up", simplement li diem "estem caminant cap a dalt" i l'arbre s'encarrega de fer la
+                mescla correcta.
+            </p>
+        </section>
+
+        <!-- TASCA PER A L'ALUMNAT -->
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tasca: El teu Personatge</h3>
+            <p>
+                Ara et toca a tu crear el protagonista del teu joc.
+            </p>
+            <ol>
+                <li>Busca o crea un SpriteSheet per al teu personatge (assegura't que tinga almenys 4 direccions).</li>
+                <li>Configura l'<strong>Input Map</strong> amb les accions de moviment.</li>
+                <li>Munta l'escena del jugador amb <code>AnimationPlayer</code> i <code>AnimationTree</code>.</li>
+                <li>Configura els BlendSpaces per a <code>Idle</code> i <code>Walk</code>.</li>
+                <li>Escriu l'script per a fer-lo moure's.</li>
+                <li>Puja un vídeo on es veja el teu personatge caminant en totes direccions i quedant-se quiet mirant
+                    cap a l'última direcció.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>
