@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 4: Creació d'Entorns i la Càmera | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="vincent_van_gogh" data-lesson-id="lesson4">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 4.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 4: Construint Mons i Enfocant l'Acció</h1>
+            <p>En aquesta lliçó aprendrem a crear l'escenari on es mourà el nostre personatge. Explorarem dues tècniques
+                diferents per a crear pantalles i configurarem una càmera per a no perdre de vista la nostra heroïna.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Importat l'Aina a la Escena</h2>
+            <p>
+                Ara que ja tenim el nostre personatge configurat amb les seues animacions i codi, és hora de ficar-lo en
+                un món real.
+                Per a fer això, crearem una nova escena anomenada <code>Main</code> (o <code>World</code>) que serà el
+                contenidor del nostre joc.
+            </p>
+            <div class="highlight-quote">
+                💡 <strong>Recordatori:</strong> Pots instanciar l'escena del <code>Player</code> (l'Aina) dins de la
+                teva escena principal arrossegant el fitxer <code>.tscn</code> des del FileSystem al panell d'Escena.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Pantalles amb Sprite2D: L'enfocament Estàtic</h2>
+            <p>
+                La forma més senzilla de crear una habitació és utilitzant una imatge ja completament dibuixada. A
+                Godot, fem servir el node <code>Sprite2D</code> per a això.
+            </p>
+            <h3>Materials Necessaris</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lliçó:</strong> Descarrega el paquet d'objectes i imatges aquí:
+                <a href="../assets/images/objects.rar" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">objects.rar</a>
+                <p>Dins trobaràs <code>room.png</code> (l'habitació buida) i <code>assets.png</code> (mobles i
+                    objectes).</p>
+            </div>
+            <h3>Passos per a crear la pantalla:</h3>
+            <ol>
+                <li>Afig un node <strong>Sprite2D</strong> com a fons i carrega <code>room.png</code> a la propietat
+                    <strong>Texture</strong>.
+                </li>
+                <li>Per als mobles i objectes, pots afegir més nodes <strong>Sprite2D</strong> fills.</li>
+                <li>Si una imatge (com <code>assets.png</code>) conté molts objectes, pots utilitzar la propietat
+                    <strong>Region</strong> en l'inspector per a retallar només l'objecte que t'interessi.
+                </li>
+            </ol>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/room.png" alt="Exemple de pantalla amb Sprite2D"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Pantalles amb TileMapLayer: L'enfocament Professional</h2>
+            <p>
+                El mètode anterior és limitat si volem crear nivells grans o reutilitzar parts. El sistema de
+                <strong>TileMaps</strong> ens permet "pintar" el nivell utilitzant una graella de rajoles (tiles).
+            </p>
+            <h3>Materials Necessaris</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lliçó:</strong> Descarrega el Tileset professional aquí:
+                <a href="../assets/lpc-tileset-16x16.zip" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">lpc-tileset-16x16.zip</a>
+            </div>
+            <p>A partir de Godot 4.3, el mètode recomanat és utilitzar el node <strong>TileMapLayer</strong>.</p>
+            <h3>Configuració del TileSet:</h3>
+            <ol>
+                <li>Crea un node <strong>TileMapLayer</strong>.</li>
+                <li>En l'inspector, a la propietat <strong>Tile Set</strong>, tria "New TileSet".</li>
+                <li>Configura la mida de la cel·la (Tile Size). Per a aquest recurs és de <strong>16x16</strong> píxels.
+                </li>
+                <li>Al panell inferior "TileSet", arrossega la imatge del tileset. Godot et preguntarà si vols crear les
+                    rajoles automàticament; digues que sí.</li>
+            </ol>
+            <h3>Pintant el nivell:</h3>
+            <ol>
+                <li>Selecciona el panell inferior "TileMap".</li>
+                <li>Tria una rajola i comença a "pintar" al visor 2D.</li>
+                <li>Pots tenir múltiples nodes <code>TileMapLayer</code> per a gestionar diferents capes (una per al
+                    terra, una altra per a les parets, etc.).</li>
+            </ol>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Camera2D: No perdis de vista l'acció</h2>
+            <p>
+                Si has provat el joc, veuràs que l'Aina es veu molt menuda al centre d'una pantalla blanca enorme (o que
+                surt de la pantalla). Per a solucionar-ho, necessitem una càmera.
+            </p>
+            <p><strong>Com afegir la càmera:</strong></p>
+            <ol>
+                <li>Ves a l'escena del <code>Player</code> (Aina).</li>
+                <li>Afig un node <strong>Camera2D</strong> com a fill del CharacterBody2D.</li>
+                <li>En l'inspector, assegura't que la propietat <strong>Enabled</strong> estiga activada.</li>
+            </ol>
+            <p><strong>Configuració recomanada:</strong></p>
+            <ul>
+                <li><strong>Zoom:</strong> Si el teu joc té una estètica Pixel Art, un zoom entre 3 i 4 sol quedar molt
+                    bé per a veure els detalls.</li>
+                <li><strong>Position Smoothing:</strong> Activa "Enabled" en aquesta secció per a que el moviment de la
+                    càmera siga suau i no a salts.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>📝 Tasca: Crea el teu Món</h3>
+            <p>
+                Ara que saps com crear entorns, dissenya el primer nivell del teu joc.
+            </p>
+            <ol>
+                <li>Crea una escena principal i importa l'Aina.</li>
+                <li>Implementa l'habitació utilitzant el mètode que prefereixis (Sprite2D o TileMapLayer).</li>
+                <li>Configura la <strong>Camera2D</strong> amb un zoom adequat.</li>
+                <li>Assegura't que l'Aina no pot sortir de les parets (revisant les col·lisions que vam veure a la lliçó
+                    2).</li>
+                <li>Pujar el projecte comprimit a Aules.</li>
+            </ol>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

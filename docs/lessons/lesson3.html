@@ -96,15 +96,16 @@
         <section class="card animate-on-load">
             <h2>2. Creant el Personatge Principal (Player)</h2>
             <p>
-                Igual que vam fer amb l'enemic, crearem una escena per al jugador.
+                Igual que vam fer amb l'enemic, crearem una escena per al nostre personatge principal, la nostra
+                heroïna. Jo l'anomenaré Aina.
             </p>
             <ol>
                 <li>Crea una nova escena i tria <strong>CharacterBody2D</strong> com a arrel. Anomena'l
-                    <code>Player</code>.
+                    <code>Aina</code> (o com tu vulgues).
                 </li>
                 <li>Afig un <strong>CollisionShape2D</strong> i defineix la seua forma (normalment una càpsula o
                     rectangle als peus).</li>
-                <li>Guarda l'escena com <code>player.tscn</code> a la carpeta <code>scenes/</code>.</li>
+                <li>Guarda l'escena a la carpeta <code>scenes/</code>.</li>
             </ol>
             <p>
                 Per a la imatge, aquesta vegada no usarem un simple <code>Sprite2D</code> ni un
@@ -113,14 +114,34 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>3. AnimationPlayer i AnimationTree</h2>
+            <h2>3. AnimationPlayer: Creant el Catàleg d'Animacions</h2>
             <p>
-                Per a personatges complexos amb molts estats (caminar, córrer, atacar, saltar, rebre dany...),
-                l'<code>AnimatedSprite2D</code> es queda curt. Necessitem un sistema que gestione les transicions entre
-                animacions de manera fluida.
+                L'AnimationPlayer és el node fonamental per a crear moviment. Ens permet animar pràcticament qualsevol
+                propietat de qualsevol node
+                del nostre projecte (posició, escala, rotació, color, o el frame d'un Sprite).
             </p>
+            <p><strong>Conceptes clau:</strong></p>
+            <ul>
+                <li><strong>La Línia de Temps (Timeline):</strong> És on definim la durada de l'animació.</li>
+                <li><strong>Fotogrames Clau (Keyframes):</strong> Són els punts on "fotografiem" una propietat. Si al
+                    segon 0 l'Aina està a la posició X=0 i al segon 1 està a X=100, Godot calcularà automàticament tots
+                    els passos entremig (interpolació).</li>
+                <li><strong>Pistes (Tracks):</strong> Cada propietat que animem té la seua pròpia pista. Podem tindre
+                    una pista per al moviment i una altra per al so en la mateixa animació.</li>
+            </ul>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/animationPlayer.PNG" alt="L'interfície de l'AnimationPlayer en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
 
-            <h3>Pas 1: Sprite Sheet i AnimationPlayer</h3>
+            <h3>Pas a Pas: Sprite Sheet i AnimationPlayer</h3>
+            <div class="highlight-quote" style="margin-bottom: 2rem;">
+                📥 <strong>Recursos de la lliçó:</strong> Pots descarregar el paquet d'imatges de l'Aina per a començar
+                a crear les teves animacions aquí:
+                <a href="../assets/images/aina.rar" download
+                    style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">aina.rar</a>
+                <p> També pots buscar els teus propis recursos a webs com opengameart.org o itch.io</p>
+            </div>
             <ol>
                 <li>Afig un node <strong>Sprite2D</strong> al teu <code>Player</code>.</li>
                 <li>Carrega una "Sprite Sheet" (un full amb tots els fotogrames del personatge) a la propietat
@@ -141,12 +162,87 @@
                     </ul>
                 </li>
             </ol>
+            <div class="highlight-quote">
+                � <strong>Nota:</strong> L'AnimationPlayer és perfecte per a crear les animacions individuals, però per
+                a gestionar-les necessitarem un sistema més intel·ligent.
+            </div>
+        </section>
 
-            <h3>Pas 2: AnimationTree (La Màquina d'Estats)</h3>
+        <section class="card animate-on-load">
+            <h2>4. AnimationTree: El Sistema Expert</h2>
             <p>
-                Ara crearem una <strong>Màquina d'Estats Finits (FSM)</strong>. Això vol dir que el personatge estarà en
-                un "Estat" en cada moment (ex: ESTAT_QUIET o ESTAT_CAMINANT) i definirem com passa d'un a l'altre.
+                Si l'AnimationPlayer crea les animacions, l'AnimationTree és el sistema que les connecta i gestiona de
+                forma intel·ligent. Ens permet crear lògiques complexes de moviment sense escriure centenars de línies
+                de "if/else".
             </p>
+
+            <h3>1. Tipus de Nodes Arrel (Tree Root)</h3>
+            <p>Quan configurem un AnimationTree, hem de triar com volem organitzar les nostres animacions:</p>
+            <ul>
+                <li><strong>AnimationNodeStateMachine:</strong> Ideal per a estats que s'exclouen mútuament (o estàs
+                    quiet, o camines, o ataques).</li>
+                <li><strong>AnimationNodeBlendTree:</strong> Permet barrejar múltiples animacions alhora (per exemple,
+                    caminar mentre reprodueixes una animació de dany).</li>
+                <li><strong>AnimationNodeBlendSpace2D:</strong> Utilitzat dins dels anteriors per a gestionar direccions
+                    (8 direccions en un mapa 2D).</li>
+            </ul>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Opció</th>
+                        <th>Tipus de control</th>
+                        <th>Analogia pedagògica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>StateMachine</strong></td>
+                        <td>Lògica d'estats</td>
+                        <td>Un mapa de ciutats i carreteres.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BlendSpace2D</strong></td>
+                        <td>Direccionalitat</td>
+                        <td>Una brúixola que apunta a l'animació correcta.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BlendTree</strong></td>
+                        <td>Mescla modular</td>
+                        <td>Una taula de mescles de DJ on combines canals.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. La combinació guanyadora per a l'Aina</h3>
+            <p>
+                Per a un personatge que es mou en 4 direccions (com un RPG clàssic), el que fem normalment és:
+            </p>
+            <ol>
+                <li>Creem una <strong>StateMachine</strong> com a arrel.</li>
+                <li>Dins de la State Machine, en lloc de posar una animació simple d'un AnimationPlayer, creem un node
+                    de tipus <strong>BlendSpace2D</strong> i l'anomenem "Caminar".</li>
+                <li>Fem el mateix per a "Parat" (Idle).</li>
+            </ol>
+
+            <p><strong>Per què ho fem així?</strong></p>
+            <ul>
+                <li>La <strong>StateMachine</strong> s'encarrega de decidir si l'Aina està caminant o parada (la part
+                    "macro" de la lògica).</li>
+                <li>El <strong>BlendSpace2D</strong> s'encarrega de decidir, si l'Aina està caminant, quina de les 4
+                    animacions (amunt, avall, esquerra, dreta) ha de mostrar segons el vector de moviment (la part
+                    "micro").</li>
+            </ul>
+            <div class="highlight-quote">
+                🧠 Utilitzem la <strong>StateMachine</strong> per a organitzar els conceptes (Parat vs. Caminant) i
+                utilitzem el
+                <strong>BlendSpace2D</strong> dins d'eixos estats per a gestionar les direccions (Nord, Sud, Est, Oest).
+                És com si la
+                <strong>StateMachine</strong> fóra el mapa de carreteres i el <strong>BlendSpace2D</strong> fóra la
+                brúixola."
+            </div>
+
+            <h3 style="margin-top: 2rem;">3. Pas a Pas: Configuració de la Màquina d'Estats</h3>
             <ol>
                 <li>Afig un node <strong>AnimationTree</strong> al <code>Player</code>.</li>
                 <li>Assigna-li l'<code>AnimationPlayer</code> que has creat abans.</li>
@@ -154,60 +250,111 @@
                 <li>Activa la casella <strong>Active</strong>.</li>
             </ol>
 
+            <h4>A. El BlendSpace2D (L'espai de barreja)</h4>
             <p>
-                Ara voràs un graf on pots crear "nodes". Fes clic dret al graf per afegir un
-                <strong>BlendSpace2D</strong>.
+                Dins del graf de la màquina d'estats, fem clic dret i creem un <strong>BlendSpace2D</strong> anomenat
+                <code>Idle</code>.
             </p>
             <ul>
-                <li>Crea un BlendSpace2D i anomena'l <code>Idle</code>. Fes doble clic per entrar. Afig punts per a les
-                    animacions de <code>idle_left</code>, <code>idle_right</code>, <code>idle_up</code>,
-                    <code>idle_down</code> en el pla cartesià 2D.
-                </li>
-                <li>Torna arrere i crea un altre BlendSpace2D anomenat <code>Walk</code>. Repeteix el procés amb les
-                    animacions de caminar.</li>
-                <li>Connecta el node <code>Start</code> a <code>Idle</code>.</li>
-                <li>Connecta <code>Idle</code> amb <code>Walk</code> i viceversa. Aquestes fletxes són les transicions.
-                </li>
+                <li>Posem l'animació de "Idle Right" al punt (1, 0) i "Idle Left" al (-1, 0).</li>
+                <li>El node rebrà una direcció (Vector2) i triarà l'animació correcta automàticament.</li>
             </ul>
+
+            <h4>B. Transicions i Condicions d'Avanç</h4>
+            <p>
+                Les fletxes que connecten estats (com d'<code>Idle</code> a <code>Walk</code>) poden ser de dos tipus:
+            </p>
+            <ul>
+                <li><strong>Immediates:</strong> Canvien d'estat tan bon punt ho demanem per codi (usant
+                    <code>travel()</code>).
+                </li>
+                <li><strong>Advance Conditions:</strong> Podem crear variables booleanes en l'inspector i connectar-les
+                    a les fletxes. L'animació canviarà sola quan la variable siga true.</li>
+            </ul>
+
+            <h4>C. Paràmetres i l'Inspector</h4>
+            <p>
+                Un dels punts que més confon els principiants és on s'amaguen les variables de l'arbre. Quan crees un
+                BlendSpace2D, apareixerà una nova secció en l'inspector del node anomenada <strong>Parameters</strong>.
+            </p>
+            <ul>
+                <li><strong>Playback:</strong> És l'objecte que usem per a viatjar entre estats.</li>
+                <li><strong>Blend Positions:</strong> Són els vectors que indiquen cap a on mira el personatge.</li>
+            </ul>
+
+            <h3>4. Les altres opcions del AnimationTree</h3>
+            <p>Si explores el menú, veuràs més opcions:</p>
+            <ul>
+                <li><strong>BlendSpace1D:</strong> Igual que el 2D, però només en un eix. Útil per a un joc de
+                    plataformes lateral (esquerra/dreta).</li>
+                <li><strong>AnimationNodeBlend2:</strong> Serveix per a barrejar dues animacions per percentatge. Per
+                    exemple, si vols que un personatge camine i estiga ferit alhora, pots barrejar les dues animacions
+                    al 50%.</li>
+                <li><strong>AnimationNodeOneShot:</strong> Per a animacions que només passen una vegada i tornen a
+                    l'estat anterior (com rebre un colp o fer un salt).</li>
+            </ul>
+
+            <div class="highlight-quote">
+                🧠 <strong>Concepte Avançat:</strong> L'AnimationTree funciona com un "filtro" entre el nostre codi i
+                l'AnimationPlayer. El codi només diu la "intenció" (velocitat: 100, direcció: dreta) i l'arbre
+                s'encarrega de triar el fotograma exacte i fer la transició suau.
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>4. El Codi: Ajuntant-ho tot</h2>
+            <h2>5. El Codi: Ajuntant-ho tot</h2>
             <p>
                 Finalment, donarem vida a tot això amb un script en el node <code>Player</code>.
             </p>
             <pre><code class="language-gdscript">extends CharacterBody2D
 
-@export var speed = 100
-@onready var animation_tree = $AnimationTree
-@onready var state_machine = animation_tree.get("parameters/playback")
+extends CharacterBody2D
 
-func _physics_process(delta):
-    # Obtenim la direcció usant les accions de l'Input Map
-    # get_vector retorna un vector normalitzat (longitud 1) basat en les 4 tecles
-    var input_direction = Input.get_vector("left", "right", "up", "down")
-    
-    # Actualitzem la velocitat
-    velocity = input_direction * speed
-    
-    # Gestionem les animacions
-    if input_direction != Vector2.ZERO:
-        # Si ens movem, informem al BlendSpace de la nostra direcció
-        animation_tree.set("parameters/Idle/blend_position", input_direction)
-        animation_tree.set("parameters/Walk/blend_position", input_direction)
-        
-        # Viatgem a l'estat "Walk"
-        state_machine.travel("Walk")
-    else:
-        # Si estem quiets, viatgem a l'estat "Idle"
-        state_machine.travel("Idle")
+@onready var tree: AnimationTree = $AnimationTree
 
-    move_and_slide()
+@export var speed=150
+
+var direction:Vector2
+
+func _ready() -> void:
+	tree.active=true
+	
+func _physics_process(delta: float) -> void:
+	
+	#En aquesta funció tenim en compte tots els processos físics, com caminar, etc
+	direction = Input.get_vector("left", "right", "up","down").normalized()
+	
+	if(direction):
+		velocity= direction*speed
+		move_and_slide()
+		
+func _process(delta: float) -> void:
+	update_animation_parameters()
+	
+
+func update_animation_parameters():
+	#Si direction es Vector.Zero, l'Aina esta parada, si no està en moviment
+	#S'actualitzen els parametres de l'arbre segons direction
+	
+	if(direction==Vector2.ZERO):
+		tree["parameters/conditions/idle"]=true
+		tree["parameters/conditions/running"]=false
+	else:
+		tree["parameters/conditions/idle"]=false
+		tree["parameters/conditions/running"]=true
+		
+	if(direction!=Vector2.ZERO):
+		tree["parameters/idle/blend_position"]=direction
+		tree["parameters/run/blend_position"]=direction
+		
+		
+		
+
             </code></pre>
             <p>
                 Fixa't com de net queda el codi gràcies a l'<code>AnimationTree</code>. No hem de dir-li "reprodueix
-                l'animació walk_up", simplement li diem "estem caminant cap a dalt" i l'arbre s'encarrega de fer la
-                mescla correcta.
+                l'animació walk_up", simplement li diem "estem caminant cap a dalt" (la <code>blend_position</code>) i
+                l'arbre s'encarrega de fer la transició fluida entre estats mitjançant el <code>playback</code>.
             </p>
         </section>
 
@@ -218,18 +365,28 @@ func _physics_process(delta):
                 Ara et toca a tu crear el protagonista del teu joc.
             </p>
             <ol>
-                <li>Busca o crea un SpriteSheet per al teu personatge (assegura't que tinga almenys 4 direccions).</li>
+                <li>Utilitza el spritesheet d'Aina, busca un altre o crea un SpriteSheet per al teu personatge
+                    (assegura't que tinga almenys 4 direccions).</li>
                 <li>Configura l'<strong>Input Map</strong> amb les accions de moviment.</li>
                 <li>Munta l'escena del jugador amb <code>AnimationPlayer</code> i <code>AnimationTree</code>.</li>
                 <li>Configura els BlendSpaces per a <code>Idle</code> i <code>Walk</code>.</li>
                 <li>Escriu l'script per a fer-lo moure's.</li>
-                <li>Puja un vídeo on es veja el teu personatge caminant en totes direccions i quedant-se quiet mirant
-                    cap a l'última direcció.</li>
+                <li>Puja el teu projecte comprimit a Aules</li>
             </ol>
         </section>
 
         <footer class="footer">
             <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
         </footer>
     </div>
 
