@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 5: La Física i la Solidesa del Món | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="physics_ready" data-lesson-id="lesson5">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 5.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 5: La Física i la Solidesa del Món</h1>
+            <p>Fins ara, el nostre joc és purament visual: l'Aina pot travessar parets, cases i arbres perquè els
+                objectes són "transparents" per al motor de física. En aquesta lliçó aprendrem a donar-los cos i volum.
+            </p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. El Cos Físic: Qui té dret a xocar?</h2>
+            <p>En Godot, una imatge (<code>Sprite2D</code>) no té consistència. Perquè un objecte puga interactuar amb
+                altres, ha d'estar "dins" d'un node de <strong>Cos Físic</strong>. Penseu en el cos com l'esquelet
+                invisible que li diu al motor com s'ha de moure l'objecte.</p>
+            <h3>Els 3 tipus de cossos que farem servir:</h3>
+            <ul>
+                <li><strong>StaticBody2D (Cossos estàtics):</strong> Per a objectes que no es mouen mai, com una taula,
+                    una roca o un arbre. Estan ahí per bloquejar el pas.</li>
+                <li><strong>CharacterBody2D (Cossos de personatge):</strong> El que ja hem usat per a l'Aina i el Blub.
+                    Són cossos fets per a moure's per codi i reaccionar davant obstacles.</li>
+                <li><strong>RigidBody2D (Cossos simulats):</strong> S'utilitzen quan volem que el motor de física
+                    controle totalment l'objecte (per exemple, una pilota que cau i rebota sola).</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Anatomia d'un objecte sòlid</h2>
+            <p>És l'error més comú: intentar posar una col·lisió a un Sprite. Recordeu sempre aquesta jerarquia. Per a
+                fer que una taula siga sòlida, l'estructura en l'Arbre de Nodes ha de ser aquesta:</p>
+            <ol>
+                <li><strong>StaticBody2D</strong> (El pare: L'esquelet físic).</li>
+                <li><strong>Sprite2D</strong> (El fill: La imatge que veiem).</li>
+                <li><strong>CollisionShape2D</strong> (El fill: El volum que xoca).</li>
+            </ol>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/staticbody.png" alt="Hierarquia de nodes per a un objecte sòlid"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            <div class="highlight-quote">
+                ⚠️ <strong>Nota important:</strong> El node físic (<code>StaticBody2D</code>) sempre ha de ser el pare.
+                Si poseu el cos físic com a fill d'un Sprite, la física no funcionarà correctament.
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Com definim el volum? (CollisionShape2D)</h2>
+            <p>Una vegada tenim el cos, necessitem dir-li quina forma té. El node <strong>CollisionShape2D</strong>
+                serveix per a dibuixar eixa àrea (que veureu de color blau a l'editor).</p>
+            <ul>
+                <li><strong>Formes simples:</strong> Useu sempre que pugueu rectangles o cercles. Són molt més fàcils de
+                    calcular per a l'ordinador que les formes complexes.</li>
+                <li><strong>Ajustament:</strong> En l'Aina, recomanem posar la col·lisió només als peus. Això permet que
+                    el seu cap puga passar "per darrere" d'un arbre, donant una sensació de profunditat 2D real.</li>
+            </ul>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Col·lisions en el TileMapLayer</h2>
+            <p>Si hem pintat un poble sencer amb el TileMap, no anem a posar centenars de nodes StaticBody manualment.
+                Ho farem directament des del TileSet:</p>
+            <ol>
+                <li>Seleccionem el nostre recurs de <strong>TileSet</strong> i creem una <strong>Physics Layer</strong>.
+                </li>
+                <li>Anem a l'apartat de "Paint" i seleccionem la propietat de física.</li>
+                <li><strong>Pintem el blau:</strong> Simplement seleccionem els mosaics de parets o aigua i els dibuixem
+                    l'àrea de col·lisió.</li>
+            </ol>
+            <p>A partir d'ara, cada vegada que pinteu amb eixe mosaic, el personatge xocarà automàticament.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>🚦 5. Capes i Màscares: Qui xoca amb qui?</h2>
+            <p>Dins de l'Inspector de qualsevol cos físic, trobareu una secció anomenada <strong>Collision</strong>.
+                Aquí és on es decideix la interacció entre objectes mitjançant una quadrícula de botons numerats.</p>
+            <p>Aquesta és la part més "enginyera", però és vital per mantenir l'ordre:</p>
+            <ul>
+                <li><strong>Collision Layer (Capa): "Qui sóc jo?"</strong><br>Indica en quina capa resideix l'objecte.
+                    Si marques el botó 1, l'objecte "viu" en la capa 1.</li>
+                <li><strong>Collision Mask (Màscara): "A qui mire?"</strong><br>Indica amb quines capes vol xocar aquest
+                    objecte. Si un objecte té la màscara 2 activada, buscarà i xocarà amb qualsevol cosa que estiga en
+                    la capa 2.</li>
+            </ul>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/layermask.PNG" alt="Configuració de col·lisions en l'inspector"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>Exemple pràctic per a l'aula:</h3>
+                <p>Imagineu que organitzem el nostre joc així:</p>
+                <ul>
+                    <li><strong>Capa 1:</strong> Jugador (Aina)</li>
+                    <li><strong>Capa 2:</strong> Escenari (Murs, cases)</li>
+                    <li><strong>Capa 3:</strong> Enemics (Blub)</li>
+                </ul>
+                <p>L'Aina tindrà la Layer 1 (ella és el jugador) i la Mask 2 i 3 (vol xocar amb murs i enemics).</p>
+                <p>El Mur tindrà la Layer 2 (ell és escenari) i Mask buida (els murs no es mouen, no necessiten "mirar"
+                    a ningú).</p>
+                <p>Un Fantasma (enemic) podria tindre la Layer 3 i la Mask 1 (vol xocar amb l'Aina), però no la Mask 2.
+                    Al no mirar la capa 2, el fantasma traspassarà les parets màgicament.</p>
+            </div>
+
+            <div class="highlight-quote" style="margin-top: 2rem;">
+                💡 <strong>Consell Docent:</strong> Podeu posar noms a les capes per no haver de recordar números. A
+                <strong>Projecte > Configuració del Projecte > Layer Names > 2D Physics</strong>, podeu escriure
+                "Jugador", "Murs", "Enemics". A partir d'ara, aquests noms apareixeran a l'Inspector!
+            </div>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tasca Pràctica 5: Fent el món sòlid</h3>
+            <p><strong>Objectiu:</strong> Aconseguir que l'Aina no traspasse els objectes de l'escenari.</p>
+            <ol>
+                <li><strong>L'Aina física:</strong> Comprova que l'Aina (CharacterBody2D) té un fill CollisionShape2D
+                    ajustat a la seua base.</li>
+                <li><strong>Objecte sòlid:</strong> Crea una escena per a una "Taula" o "Roca" usant un StaticBody2D com
+                    a pare.</li>
+                <li><strong>TileMap físic:</strong> Configura la Physics Layer del teu TileSet i pinta les col·lisions
+                    dels teus murs.</li>
+                <li><strong>Prova de Debug:</strong> Activa el menú superior <strong>Debug > Visible Collision
+                        Shapes</strong>. Ara, en jugar, veuràs les línies blaves de col·lisió.</li>
+            </ol>
+            <p><strong>Entrega:</strong> El teu proojecte comprimit a Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

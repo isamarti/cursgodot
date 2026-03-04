@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 6: Variables Globals i Senyals | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_alive" data-lesson-id="lesson6">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 6.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>Lliçó 6: Variables Globals i Senyals</h1>
+            <p>Fins ara, el nostre joc és una col·lecció d'objectes que es mouen. En aquesta lliçó, farem que aquests
+                objectes "senten" la presència dels altres i que el joc tinga una memòria que no s'esborre.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. Vida Global vs. Vida Local</h2>
+            <p>Fins ara, l'Aina es podia moure per la pantalla i xocar amb objectes o el blub sense consequències. Però
+                per a que el video joc tinga sentit, el més normal seria que l'Aina perga vida quan es troba a prop d'un
+                perill (el blub) i que puga matar enemics.</p>
+            <p>
+                Abans de programar, hem de decidir on guardem la informació sobre la vida:</p>
+            <ul>
+                <li>Vida de l'Aina (Global): Com que l'Aina és la nostra protagonista i la seua vida ha de persistir
+                    encara
+                    que canviem de nivell, ha de ser una variable global. Només hi ha una Aina en tot el joc.</li>
+
+                <li>Vida dels Monstres (Local): Podem tindre 10 "Blubs" a la pantalla. Si un rep un colp, els altres no
+                    han
+                    de morir. Per tant, cada monstre té la seua pròpia variable vida dins del seu script personal.</li>
+            </ul>
+
+            <p>Per a guardar informació que dure tota la partida (vida, monedes, claus), usem els
+                <strong>Autoloads</strong>.
+            </p>
+            <div class="highlight-section">
+                <h3>Com crear un Autoload:</h3>
+                <ol>
+                    <li>Crea un nou Script (per exemple, <code>Globals.gd</code>).</li>
+                    <li>Ves a <strong>Projecte > Configuració del Projecte > Autoload</strong>.</li>
+                    <li>Afegeix el teu script i posa-li un nom (ex: <code>Globals</code>).</li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/globals.PNG" alt="Configuració d'Autoload en el Projecte"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            <p> Afig el següent script al teu Autoload Globals.gd. Amb ell podem gestionar la vida de l'Aina.</p>
+            <pre><code class="language-gdscript">extends Node
+
+var aina_life  = 100  # Comencem amb 100 punts de vida
+
+func hurt(amount):
+	aina_life -= amount
+	print("L'Aina ha rebut mal! Vida restant: ", aina_life)
+	
+	if aina_life <= 0:
+		game_over()
+
+func game_over():
+	print("GAME OVER. Reiniciant...")
+	aina_life = 100 # Restablim la vida
+	get_tree().reload_current_scene() # Torna a carregar el nivell
+</code></pre>
+            <p>Ara, des de QUALSEVOL script del joc, pots escriure <code>Globals.aina_life</code> per a accedir a eixa
+                dada o cridar les funcions per executar l'acció.
+            </p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. L'Area2D: El sensor de proximitat</h2>
+            <p>A diferència dels nodes de "Cos" (StaticBody2D o CharacterBody2D), l'Area2D no té massa ni és sòlida.</p>
+            <p><strong>Què és?</strong> Imagineu-la com un "camp de força" invisible o un sensor de moviment d'una
+                alarma.</p>
+            <p><strong>Com funciona?</strong> Quan un objecte entra en el seu espai, l'Area2D no l'atura, sinó que es
+                limita a "avisar".</p>
+            <p><strong>Utilitat:</strong> És perfecta per a detectar quan el jugador entra en una habitació, quan toca
+                una moneda o quan es troba a prop d'un perill (com el Blub).</p>
+            <div class="highlight-section">
+                <h3>Creant el sensor de dany per a l'Aina:</h3>
+                <ol>
+                    <li>Afegeix a l'escena de l'Aina un node <strong>Area2D</strong> i canvia el nom per
+                        <code>HurtArea</code>.
+                    </li>
+                    <li>Crea-li un fill <strong>CollisionShape2D</strong> i tria la forma (cercle, rectangle o polígon)
+                        que millor s'ajuste a la zona del cos on l'Aina pot rebre dany.</li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/aread.PNG" alt="Nodes d'Aina amb HurtArea"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Què són els Senyals (Signals)?</h2>
+            <p>En programació, sovint volem que passe una cosa quan n'ocorre una altra (com un polsador i una bombeta).
+                En Godot, això es resol amb el model <strong>Emisor-Receptor</strong>.</p>
+            <ul>
+                <li><strong>L'Emisor:</strong> És el node on passa l'esdeveniment (ex: l'Area2D que detecta algú).</li>
+                <li><strong>El Senyal:</strong> És el missatge que s'envia a l'aire (ex: "He sigut trepitjat!").</li>
+                <li><strong>El Receptor:</strong> És un script (normalment del pare o d'un node de control) que està
+                    "escoltant" eixe senyal i executa una funció quan el rep.</li>
+            </ul>
+            <p><strong>Per què és millor que el codi tradicional?</strong> Perquè els nodes no necessiten saber-ho tot
+                els uns dels altres. L'Area2D només crida: "He detectat algú!", i li és igual si qui l'escolta és el
+                jugador, l'enemic o el comptador de punts.</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/signals.jpg" alt="Model Emisor-Receptor en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/senyalsarea2d.PNG" alt="Pestanya de Senyals en Godot"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>Els senyals de l'Area2D</h3>
+                <p>L'Area2D és el node especialitzat en detecció. Els seus senyals principals són:</p>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Senyal</th>
+                            <th>Què fa?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>body_entered(body)</code></td>
+                            <td>S'activa quan un cos físic (com l'Aina) entra a l'àrea.</td>
+                        </tr>
+                        <tr>
+                            <td><code>body_exited(body)</code></td>
+                            <td>S'activa quan el cos surt de l'àrea.</td>
+                        </tr>
+                        <tr>
+                            <td><code>area_entered(area)</code></td>
+                            <td>S'activa quan una altra àrea (com la d'una espasa) entra en aquesta.</td>
+                        </tr>
+                        <tr>
+                            <td><code>area_exited(area)</code></td>
+                            <td>S'activa quan l'altra àrea en surt.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p> Aquests senyals són els que utilitzarem el 90% del temps. Els senyals que especifiquen "shape"
+                    s'utilitzen per avisar de formes de col·lisió específiques. Imagina un monstre que té dues
+                    col·lisions dins l'aread2d: una al cap (per rebre el doble de mal) i una al cos. Amb
+                    area_shape_entered, el motor ens pot dir exactament quin dels dos "cercles" blaus ha rebut el colp
+                    gràcies a l'índex, encara que ambdós pertanyen al mateix monstre. </p>
+                <p>En qualsevol cas, per a una situació així és més senzill utilitzar dos area2d diferentes i els
+                    senyals simples. </p>
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. El Sistema de Combat: Capes i Àrees especialitzades</h2>
+            <p>Per a fer un joc robust, no usarem el cos principal per a detectar el dany. Crearem dos sensors d'Area2D
+                específics per a cada personatge. Perquè aquests sensors es troben entre ells sense confondre's amb els
+                murs o el terra, configurarem les Capes (Layers) i Màscares (Masks) de física:</p>
+
+            <div class="highlight-section">
+                <ul>
+                    <li><strong>Capa 2 (HurtArea):</strong> On l'Aina "rep" el mal.</li>
+                    <li><strong>Capa 3 (AttackArea):</strong> On l'enemic "fa" el mal.</li>
+                </ul>
+            </div>
+
+            <h3>Configuració a l'Enemic (L'atacant):</h3>
+            <ol>
+                <li>Afegeix un <strong>Area2D</strong> anomenat <code>AttackArea</code>.</li>
+                <li>A l'Inspector (Collision):
+                    <ul>
+                        <li><strong>Layer:</strong> Capa 3</li>
+                        <li><strong>Mask:</strong> Capa 2 (per a buscar la zona de rebre mal de l'Aina).</li>
+                    </ul>
+                </li>
+                <li>Afegeix el seu <strong>CollisionShape2D</strong>.</li>
+            </ol>
+
+            <h3>Configuració a l'Aina (La víctima):</h3>
+            <ol>
+                <li>Afegeix un <strong>Area2D</strong> anomenat <code>HurtArea</code>.</li>
+                <li>A l'Inspector (Collision):
+                    <ul>
+                        <li><strong>Layer:</strong> Capa 2</li>
+                        <li><strong>Mask:</strong> Capa 3 (per a detectar l'atac de l'enemic).</li>
+                    </ul>
+                </li>
+                <li>Afegeix el seu <strong>CollisionShape2D</strong>.</li>
+            </ol>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>5. Connectant la detecció de dany</h2>
+            <p>Ara que les àrees estan configurades per "escoltar-se" només entre elles, connectarem els senyals per a
+                gestionar la vida Global (Aina) i Local (Enemic).</p>
+
+            <p>En aquest projecte, connectarem el senyal de dany dins de l'script de l'enemic.</p>
+
+            <p><strong>Per què ho fem així?</strong> Si l'Aina haguera de gestionar el dany de tots els monstres, hauria
+                de conéixer-los a tots. En canvi, si l'enemic és qui gestiona l'atac:</p>
+            <ul>
+                <li>Ell sap exactament quants punts de vida treu (ex: l'enemic treu 10, però un cap final en podria
+                    treure 50).</li>
+                <li>Hi ha una funció global que li lleva punts a l'Aina i qual monstre la pot cridar.</li>
+            </ul>
+            <p>En el blob, connectem la senyal <code>area_entered</code> del seu <code>AttackArea</code> amb la funció
+                <code>_on_attack_area_entered</code> al script del blob, creem una variable <code>hurt_amount</code> amb
+                el valor de dany
+                dessitjat i afegim aquest codi.
+            </p>
+            <pre><code class="language-gdscript"> 
+    func _on_attack_area_area_entered(area: Area2D) -> void:
+	    #Ens asegurem que l'area detectada és del jugador
+	    if(area.get_parent().is_in_group("player")):
+		    Globals.hurt(hurt_amount)
+
+</code></pre>
+
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tasca Pràctica 6: Comunicació entre nodes</h3>
+            <p><strong>Objectiu:</strong> Crear un sistema de puntuació o de vida que persistisca entre escenes.</p>
+            <ol>
+                <li><strong>Crea un Autoload:</strong> Crea un script anomenat <code>Global.gd</code> amb una variable
+                    <code>puntuacio</code>.
+                </li>
+                <li> Configura els noms de les capes de física a Projecte > Configuració del Projecte > 2D Physics:</li>
+                <li>Configura els nodes HurtArea a l'Aina i AttackArea al blob.</li>
+                <li>Crea el script de globals i fica'l en autoload.</li>
+                <li>Connecta la senyal area_entered del blob amb la funció _on_attack_area_area_entered al script del
+                    blob, creem una variable hurt_amount amb el valor de dany
+                    dessitjat i afegim aquest codi.
+                </li>
+            </ol>
+            <p><strong>Entrega:</strong> El teu projecte actualitzat a Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

@@ -34,21 +34,7 @@
         </header>
 
         <section class="card animate-on-load">
-            <h2>1. Importat l'Aina a la Escena</h2>
-            <p>
-                Ara que ja tenim el nostre personatge configurat amb les seues animacions i codi, és hora de ficar-lo en
-                un món real.
-                Per a fer això, crearem una nova escena anomenada <code>Main</code> (o <code>World</code>) que serà el
-                contenidor del nostre joc.
-            </p>
-            <div class="highlight-quote">
-                💡 <strong>Recordatori:</strong> Pots instanciar l'escena del <code>Player</code> (l'Aina) dins de la
-                teva escena principal arrossegant el fitxer <code>.tscn</code> des del FileSystem al panell d'Escena.
-            </div>
-        </section>
-
-        <section class="card animate-on-load">
-            <h2>2. Pantalles amb Sprite2D: L'enfocament Estàtic</h2>
+            <h2>1. Pantalles amb Sprite2D: L'enfocament Estàtic</h2>
             <p>
                 La forma més senzilla de crear una habitació és utilitzant una imatge ja completament dibuixada. A
                 Godot, fem servir el node <code>Sprite2D</code> per a això.
@@ -60,15 +46,23 @@
                     style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">objects.rar</a>
                 <p>Dins trobaràs <code>room.png</code> (l'habitació buida) i <code>assets.png</code> (mobles i
                     objectes).</p>
+                <p>També pots buscar els teus propis recursos a webs com <a href="https://opengameart.org/"
+                        target="_blank">opengameart.org</a> o <a href="https://itch.io/game-assets"
+                        target="_blank">itch.io</a>, o generar-los amb alguna IA.</p>
             </div>
             <h3>Passos per a crear la pantalla:</h3>
             <ol>
+                <li>Crea una nova escena amb Node2D com arrel.</li>
                 <li>Afig un node <strong>Sprite2D</strong> com a fons i carrega <code>room.png</code> a la propietat
                     <strong>Texture</strong>.
                 </li>
+                <li>Si la imatge no acopla amb la mida de la pantalla, pots escalar-la amb la propietat
+                    <strong>Scale</strong> o utilitzar la propietat <strong>Region</strong> per a retallar només la part
+                    que t'interessa.
+                </li>
                 <li>Per als mobles i objectes, pots afegir més nodes <strong>Sprite2D</strong> fills.</li>
                 <li>Si una imatge (com <code>assets.png</code>) conté molts objectes, pots utilitzar la propietat
-                    <strong>Region</strong> en l'inspector per a retallar només l'objecte que t'interessi.
+                    <strong>Region</strong> en l'inspector per a retallar només l'objecte que t'interessa.
                 </li>
             </ol>
             <div style="margin-top: 2rem; text-align: center;">
@@ -78,16 +72,20 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>3. Pantalles amb TileMapLayer: L'enfocament Professional</h2>
+            <h2>2. Pantalles amb TileMapLayer: L'enfocament Professional</h2>
             <p>
                 El mètode anterior és limitat si volem crear nivells grans o reutilitzar parts. El sistema de
                 <strong>TileMaps</strong> ens permet "pintar" el nivell utilitzant una graella de rajoles (tiles).
             </p>
             <h3>Materials Necessaris</h3>
             <div class="highlight-quote" style="margin-bottom: 2rem;">
-                📥 <strong>Recursos de la lliçó:</strong> Descarrega el Tileset professional aquí:
+                📥 <strong>Recursos de la lliçó:</strong> Descarrega el Tileset complet aquí:
                 <a href="../assets/lpc-tileset-16x16.zip" download
                     style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">lpc-tileset-16x16.zip</a>
+                <p> També pots buscar un que t'agrade al web. Per buscar tilesets pots utilitzar els següents enllaços:
+                    <a href="https://opengameart.org/" target="_blank">opengameart.org</a>
+                    <a href="https://itch.io/game-assets" target="_blank">itch.io</a> i buscar LPC tilesets.
+                </p>
             </div>
             <p>A partir de Godot 4.3, el mètode recomanat és utilitzar el node <strong>TileMapLayer</strong>.</p>
             <h3>Configuració del TileSet:</h3>
@@ -106,13 +104,106 @@
                 <li>Pots tenir múltiples nodes <code>TileMapLayer</code> per a gestionar diferents capes (una per al
                     terra, una altra per a les parets, etc.).</li>
             </ol>
+
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/tilemapcanvas.PNG" alt="Interfície del TileMap"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+
+            <div class="highlight-section">
+                <h3>🖌️ Eines de Dibuix (La Barra Superior)</h3>
+                <p><strong>El Pinzell (Selecció/Pintar):</strong></p>
+                <ul>
+                    <li>Icona: Un pinzell.</li>
+                    <li>Què fa: És l'eina per defecte. Selecciones un tile (mosaic) del teu catàleg i fas clic a la
+                        quadrícula per a col·locar-lo. Si mantens premut i arrossegues, aniràs pintant de forma
+                        contínua.</li>
+                </ul>
+
+                <p><strong>La Goma d'esborrar:</strong></p>
+                <ul>
+                    <li>Icona: Una goma.</li>
+                    <li>Què fa: Elimina els tiles de la capa on estigues treballant.</li>
+                    <li><em>Tip:</em> També pots esborrar ràpidament fent clic amb el botó dret del ratolí mentre tens
+                        seleccionat el pinzell.</li>
+                </ul>
+
+                <p><strong>El Comptagotes (Picker):</strong></p>
+                <ul>
+                    <li>Icona: Un comptagotes.</li>
+                    <li>Què fa: Si fas clic sobre un tile que ja està pintat a l'escenari, el selecciona automàticament
+                        al teu catàleg per a tornar a pintar amb ell. Estalvia molt de temps de cerca.</li>
+                </ul>
+
+                <p><strong>El poal de pintura (Bucket Fill):</strong></p>
+                <ul>
+                    <li>Icona: Un poal vessant pintura.</li>
+                    <li>Què fa: Omple una àrea tancada amb el mateix tile. És ideal per a omplir grans zones d'herba o
+                        aigua ràpidament.</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem;">📐 Eines de Formes Geomètriques</h3>
+                <p><strong>Línia:</strong></p>
+                <ul>
+                    <li>Icona: Una línia diagonal.</li>
+                    <li>Què fa: Fas clic en un punt, arrossegues i dibuixes una línia recta de tiles. Útil per a fer
+                        tanques o camins rectes.</li>
+                </ul>
+
+                <p><strong>Rectangle:</strong></p>
+                <ul>
+                    <li>Icona: Un quadrat buit.</li>
+                    <li>Què fa: Permet dibuixar un rectangle d'un sol colp. Si el mantens seleccionat, pots triar si
+                        vols que siga només el contorn o el rectangle omplit.</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem;">🎨 Opcions de Transformació (Molt útil!)</h3>
+                <p>Al costat de les eines, veuràs unes fletxes o icones de gir. Aquestes et permeten modificar el tile
+                    abans de pintar-lo:</p>
+                <ul>
+                    <li><strong>Rotació a dreta o esquerra:</strong> Gira el mosaic 90 graus.</li>
+                    <li><strong>Gir Horitzontal/Vertical:</strong> Serveix per a "voltejar" una imatge. Per exemple, si
+                        tens una peça d'un cantó d'una casa, la pots girar per a fer servir la mateixa imatge per a
+                        l'altre cantó.</li>
+                </ul>
+            </div>
+            <div class="highlight-quote">
+                💡 <strong>Consell:</strong> Podeu seleccionar un grup de mosaics al catàleg (per exemple, un arbre
+                sencer format per 4 peces) i pintar-los tots alhora com si foren un sol segell.
+            </div>
         </section>
 
         <section class="card animate-on-load">
-            <h2>4. Camera2D: No perdis de vista l'acció</h2>
+            <h2>3. Importat l'Aina a la Escena</h2>
             <p>
-                Si has provat el joc, veuràs que l'Aina es veu molt menuda al centre d'una pantalla blanca enorme (o que
-                surt de la pantalla). Per a solucionar-ho, necessitem una càmera.
+                Ara que ja tenim les nostres pantalles o el nostre TileMap configurat, és hora de ficar els personatges
+                en
+                un món real.
+            </p>
+            <p>Els persontges es poden impotar des de l'arbre de l'escena, com si foren un node més, amb el segon botó
+                (Instantiate child scene). D'aquesta manera, l'escena del jugador s'ha convertit en un node més de
+                l'escena principal i podem col·locar-lo on vulguem, així com vore si te una mida apropiada per a la
+                nostra escena i si es veu bé.</p>
+            <p>També podem instanciar els personatges per codi, però en aquest cas sols el vorem en la pantalla en temps
+                d'execució. Per això utilitzem la següent expressió en la funció _ready():</p>
+            <div class="highlight-code">
+                <pre><code>
+                    var player = load("res://player.tscn").instantiate()
+                    add_child(player)
+                </code></pre>
+            </div>
+            <p>En el cas de que vulguem que el personatge es vega en temps d'edició, hem de crear una "instància" del
+                personatge en l'escena principal. Per a això, hem de fer clic en el segon botó de la barra d'eines
+                (Instantiate child scene). D'aquesta manera, l'escena del jugador s'ha convertit en un node més de
+                l'escena principal i podem col·locar-lo on vulguem, així com vore si te una mida apropiada per a la
+                nostra escena i si es veu bé.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Camera2D: No perdre de vista l'acció</h2>
+            <p>
+                Si has provat el joc, voràs que l'Aina es veu molt menuda al centre d'una pantalla blanca enorme (o que
+                eix de la pantalla). Per a solucionar-ho, necessitem una càmera.
             </p>
             <p><strong>Com afegir la càmera:</strong></p>
             <ol>
@@ -123,7 +214,8 @@
             <p><strong>Configuració recomanada:</strong></p>
             <ul>
                 <li><strong>Zoom:</strong> Si el teu joc té una estètica Pixel Art, un zoom entre 3 i 4 sol quedar molt
-                    bé per a veure els detalls.</li>
+                    bé per a veure els detalls, encara que ambs les mides de la pantalla pot ser el veges un poc gran.
+                </li>
                 <li><strong>Position Smoothing:</strong> Activa "Enabled" en aquesta secció per a que el moviment de la
                     càmera siga suau i no a salts.</li>
             </ul>
@@ -135,12 +227,10 @@
                 Ara que saps com crear entorns, dissenya el primer nivell del teu joc.
             </p>
             <ol>
-                <li>Crea una escena principal i importa l'Aina.</li>
-                <li>Implementa l'habitació utilitzant el mètode que prefereixis (Sprite2D o TileMapLayer).</li>
+                <li>Implementa dos pantalles, una amb cada métode (Sprite2D i TileMapLayer).</li>
+                <li>Crea una escena principal i importa l'Aina en les dos pantalles.</li>
                 <li>Configura la <strong>Camera2D</strong> amb un zoom adequat.</li>
-                <li>Assegura't que l'Aina no pot sortir de les parets (revisant les col·lisions que vam veure a la lliçó
-                    2).</li>
-                <li>Pujar el projecte comprimit a Aules.</li>
+                <li>Puja el projecte comprimit a Aules.</li>
             </ol>
         </section>
 

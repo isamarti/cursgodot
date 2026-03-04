@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lliçó 7: L'Art del Combat | Premium Learning</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body data-password="aina_combat" data-lesson-id="lesson7">
+
+    <!-- PASSWORD OVERLAY -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Accés Restringit</h2>
+            <p>Introdueix la contrasenya per a accedir a la Lliçó 7.</p>
+            <input type="password" id="password-input" placeholder="Contrasenya">
+            <p id="error-message"></p>
+            <button id="submit-password" class="btn">Desbloquejar Lliçó</button>
+            <p style="margin-top: 1rem;"><a href="../index.html" style="color: var(--accent-color);">Tornar a
+                    l'Inici</a></p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden by default) -->
+    <div id="main-content" class="container hidden-content">
+        <header>
+            <h1>⚔️ Lliçó 7: L'Art del Combat – Sincronització, Animació i Detecció</h1>
+            <p>En aquesta lliçó transformarem l'Aina d'una exploradora a una guerrera. No es tracta només de prémer una
+                tecla, sinó d'entendre com el motor coordina la imatge de l'arma, la seua zona de perill i la lògica del
+                monstre.</p>
+        </header>
+
+        <section class="card animate-on-load">
+            <h2>1. L'Anatomia de l'Arma: Més que una imatge</h2>
+            <p>Una espasa en un videojoc no és només un dibuix que es mou. És la combinació de dos elements vitals:</p>
+            <ul>
+                <li><strong>Visual (Sprite2D):</strong> El que el jugador veu.</li>
+                <li><strong>Física (Area2D + CollisionShape2D):</strong> El que el joc entén com a "zona de perill" o
+                    <strong>Hitbox</strong>.</li>
+            </ul>
+            <p>En Godot, el més eficient és crear una escena separada anomenada <code>Weapon.tscn</code>. Així, podríem
+                canviar d'espasa o fins i tot donar-li armes als enemics reutilitzant la mateixa lògica.</p>
+
+            <div class="highlight-section">
+                <h3>Estructura del Node Weapon:</h3>
+                <ol>
+                    <li><strong>Node2D</strong> (Arrel de l'escena).</li>
+                    <li><strong>Sprite2D</strong> (La imatge de l'espasa).</li>
+                    <li><strong>Area2D</strong> (Anomenada <code>Hitbox</code>).
+                        <ul>
+                            <li><strong>CollisionShape2D</strong>: La zona exacta on l'espasa fa mal.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <img src="../assets/images/weapon_nodes.PNG" alt="Estructura de nodes de l'arma"
+                    style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>2. Sincronització: El truc de la línia de temps</h2>
+            <p>Aquí és on ocorre la màgia. Si deixem la col·lisió de l'espasa activada sempre, els enemics moririen
+                només amb tocar-nos mentre caminem. L'arma només ha de ser perillosa <strong>quan estem
+                    atacant</strong>.</p>
+            <p>Usarem l'<strong>AnimationPlayer</strong> de l'Aina per a controlar no només el moviment, sinó també
+                l'activació física de l'arma:</p>
+
+            <div class="highlight-section">
+                <h3>Com sincronitzar el colp:</h3>
+                <ol>
+                    <li>Dins de l'animació d'atac (ex: <code>attack_down</code>), afegeix una <strong>Property
+                            Track</strong>.</li>
+                    <li>Selecciona el node <code>CollisionShape2D</code> de l'arma.</li>
+                    <li>Tria la propietat <code>disabled</code>.</li>
+                    <li>A l'inici de l'animació, posa un keyframe amb <code>disabled = true</code>.</li>
+                    <li>En el moment exacte del "swing" (quan l'espasa brilla o es mou ràpid), posa un keyframe amb
+                        <code>disabled = false</code>.</li>
+                    <li>Al final del moviment, torna a posar <code>disabled = true</code>.</li>
+                </ol>
+            </div>
+            <p>D'aquesta manera, l'espasa només "existeix" físicament durant uns pocs mil·lisegons, de forma
+                perfectament sincronitzada amb el que veu l'usuari.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>3. Capes de Combat: Qui rep el colp?</h2>
+            <p>Recordeu la Lliçó 5? Perquè el combat funcione, hem de configurar correctament les capes (Layers) i
+                màscares (Masks) de la nostra <strong>Hitbox</strong> (l'arma):</p>
+            <ul>
+                <li><strong>Layer:</strong> Capa 4 (Dany del Jugador).</li>
+                <li><strong>Mask:</strong> Capa 3 (On viuen els Enemics).</li>
+            </ul>
+            <p>Així, l'espasa "només té ulls" per als enemics i ignorarà completament les parets o la pròpia Aina.</p>
+        </section>
+
+        <section class="card animate-on-load">
+            <h2>4. Codi de Combat: Disparant l'animació</h2>
+            <p>En el nostre script de l'Aina, hem de detectar quan el jugador vol atacar. Com que estem usant un
+                <strong>AnimationTree</strong>, no cridarem l'animació directament, sinó que canviarem un paràmetre.</p>
+            <pre><code class="language-gdscript"># Dins de _process o _physics_process
+if Input.is_action_just_pressed("attack"):
+    # Activem el "trigger" d'atac en l'AnimationTree
+    animation_tree.set("parameters/conditions/is_attacking", true)
+    # Bloquegem el moviment durant l'atac (opcional)
+    velocity = Vector2.ZERO
+</code></pre>
+            <p>És vital que en terminar l'animació d'atac, el <code>is_attacking</code> torne a ser <code>false</code>.
+                Això ho podem fer amb un <strong>AnimationPlayer Callback</strong> o simplement posant un keyframe al
+                final de l'animació que cride una funció de reset.</p>
+        </section>
+
+        <section class="card animate-on-load task-box">
+            <h3>🛠️ Tasca Pràctica 7: El Teu Primer Colp</h3>
+            <p><strong>Objectiu:</strong> Implementar un atac funcional que active la seua hitbox només durant el swing.
+            </p>
+            <ol>
+                <li><strong>Escena Weapon:</strong> Crea l'escena <code>Weapon</code> amb un Area2D i ficala com a filla
+                    de l'Aina.</li>
+                <li><strong>Hitbox Sincronitzada:</strong> Selecciona l'animació d'atac en l'AnimationPlayer i crea la
+                    línia de temps per a la propietat <code>disabled</code> del CollisionShape2D.</li>
+                <li><strong>Programació:</strong> Afegeix el botó d'atac a l'Input Map ("attack" -> Tecla Espai o C) i
+                    fes que l'Aina execute l'animació.</li>
+                <li><strong>Visualització:</strong> Activa <strong>Debug > Visible Collision Shapes</strong> per a
+                    comprovar que la zona blava de l'espasa només apareix durant el colp.</li>
+            </ol>
+            <p><strong>Entrega:</strong> Vídeo curt del Debug o el teu projecte actualitzat a Aules.</p>
+        </section>
+
+        <footer class="footer">
+            <a href="../index.html" class="btn">Tornar a l'Inici</a>
+            <div class="license" style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.8;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">
+                    <img alt="Llicència Creative Commons" style="border-width:0; margin-bottom: 0.5rem;"
+                        src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+                </a><br />
+                Aquesta obra està subjecta a una llicència de <a rel="license"
+                    href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"
+                    style="color: var(--accent-color);">Creative Commons Reconeixement-NoComercial 4.0
+                    Internacional</a>.
+            </div>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>
