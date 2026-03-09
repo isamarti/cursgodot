@@ -39,7 +39,8 @@
             <ul>
                 <li><strong>Visual (Sprite2D):</strong> El que el jugador veu.</li>
                 <li><strong>Física (Area2D + CollisionShape2D):</strong> El que el joc entén com a "zona de perill" o
-                    <strong>Hitbox</strong>.</li>
+                    <strong>Hitbox</strong>.
+                </li>
             </ul>
             <p>En Godot, el més eficient és crear una escena separada anomenada <code>Weapon.tscn</code>. Així, podríem
                 canviar d'espasa o fins i tot donar-li armes als enemics reutilitzant la mateixa lògica.</p>
@@ -47,10 +48,9 @@
             <div class="highlight-section">
                 <h3>Estructura del Node Weapon:</h3>
                 <ol>
-                    <li><strong>Node2D</strong> (Arrel de l'escena).</li>
-                    <li><strong>Sprite2D</strong> (La imatge de l'espasa).</li>
                     <li><strong>Area2D</strong> (Anomenada <code>Hitbox</code>).
                         <ul>
+                            <li><strong>Sprite2D</strong> (La imatge de l'espasa).</li>
                             <li><strong>CollisionShape2D</strong>: La zona exacta on l'espasa fa mal.</li>
                         </ul>
                     </li>
@@ -63,72 +63,202 @@
         </section>
 
         <section class="card animate-on-load">
-            <h2>2. Sincronització: El truc de la línia de temps</h2>
-            <p>Aquí és on ocorre la màgia. Si deixem la col·lisió de l'espasa activada sempre, els enemics moririen
-                només amb tocar-nos mentre caminem. L'arma només ha de ser perillosa <strong>quan estem
-                    atacant</strong>.</p>
-            <p>Usarem l'<strong>AnimationPlayer</strong> de l'Aina per a controlar no només el moviment, sinó també
-                l'activació física de l'arma:</p>
+            <h2>2. Versatilitat: Una sola escena, moltes armes</h2>
+            <p>En comptes de crear centenars d'escenes per a cada arma del joc, el més eficient és utilitzar una única
+                escena <code>Weapon.tscn</code> i canviar les seues propietats dinàmicament.</p>
+            <p>Podem carregar diferents textures per a l'<strong>Sprite2D</strong> en temps d'execució i definir valors
+                de "dany" (mals) específics per a cada tipus d'arma:</p>
 
             <div class="highlight-section">
-                <h3>Com sincronitzar el colp:</h3>
+                <h3>Control Dinàmic per Codi:</h3>
+                <ul>
+                    <li><strong>Textures:</strong> Canviem la propietat <code>texture</code> de l'Sprite segons l'arma
+                        equipada.</li>
+                    <li><strong>Dany Variable:</strong> Assignem un valor de dany diferent a cada textura.</li>
+                    <li><strong>Ajust de Hitbox:</strong> Podem acoblar la mida del <code>CollisionShape2D</code> a la
+                        mida exacta de la nova textura via codi.</li>
+                </ul>
+            </div>
+            <pre><code class="language-gdscript"># Exemple d'ajust de col·lisió per codi
+func update_weapon(new_texture, damage_value):
+    sprite.texture = new_texture
+    damage = damage_value
+    # Ajustem la mida de la col·lisió a la nova textura
+    var shape = collision_shape.shape
+    if shape is RectangleShape2D:
+        shape.size = new_texture.get_size()
+</code></pre>
+            <p>Això ens permet estalviar memòria i facilitar l'escalabilitat del nostre arsenal sense complicar
+                l'estructura de nodes.</p>
+
+            <div class="highlight-section" style="border-left: 4px solid var(--accent-color);">
+                <p>💡 <strong>Nota:</strong> És recomanable escalar les armes fora del joc a la mida que ens vaja bé per
+                    al personatge. Encara que escalar per codi és possible, saber quant hem
+                    d'escalar "a ull" cada textura diferent que canviem és pràcticament impossible. Igualment, totes les
+                    armes han d'estar en la mateixa orientació i és recomanable que l'empunyadura estiga al (0,0) de la
+                    escena, pero col·locar-li-la sempre a la ma d'Aina</p>
+            </div>
+        </section>
+
+
+        <section class="card animate-on-load">
+            <h2>3. L'Arma en la Guerrera: Integració a l'Aina</h2>
+            <p>Una vegada tenim la nostra escena <code>Weapon.tscn</code>, el següent pas és integrar-la dins de l'Aina.
+                No volem que l'espasa siga un element independent que flote, sinó una part de la seua anatomia.</p>
+
+            <div class="highlight-section">
+                <h3>Passos per a la instal·lació:</h3>
                 <ol>
-                    <li>Dins de l'animació d'atac (ex: <code>attack_down</code>), afegeix una <strong>Property
-                            Track</strong>.</li>
-                    <li>Selecciona el node <code>CollisionShape2D</code> de l'arma.</li>
-                    <li>Tria la propietat <code>disabled</code>.</li>
-                    <li>A l'inici de l'animació, posa un keyframe amb <code>disabled = true</code>.</li>
-                    <li>En el moment exacte del "swing" (quan l'espasa brilla o es mou ràpid), posa un keyframe amb
-                        <code>disabled = false</code>.</li>
-                    <li>Al final del moviment, torna a posar <code>disabled = true</code>.</li>
+                    <li>Obrim l'escena de l'<strong>Aina</strong>.</li>
+                    <li>Arrosseguem l'arxiu <code>Weapon.tscn</code> des del sistema de fitxers fins al panell de nodes
+                        de l'Aina (fent-la la seua filla).</li>
+                    <li><strong>Posicionament:</strong> És crucial que l'empunyadura de l'arma estiga al punt
+                        <code>(0,0)</code> de la seua pròpia escena. Així, quan la col·loquem a la mà de l'Aina, rotarà
+                        i es mourà des del punt correcte.
+                    </li>
                 </ol>
             </div>
-            <p>D'aquesta manera, l'espasa només "existeix" físicament durant uns pocs mil·lisegons, de forma
-                perfectament sincronitzada amb el que veu l'usuari.</p>
+            <p>Recordeu: Totes les textures d'armes que usem han de tindre la mateixa orientació original perquè el codi
+                de rotació funcione igual per a totes.</p>
         </section>
+
 
         <section class="card animate-on-load">
-            <h2>3. Capes de Combat: Qui rep el colp?</h2>
-            <p>Recordeu la Lliçó 5? Perquè el combat funcione, hem de configurar correctament les capes (Layers) i
-                màscares (Masks) de la nostra <strong>Hitbox</strong> (l'arma):</p>
-            <ul>
-                <li><strong>Layer:</strong> Capa 4 (Dany del Jugador).</li>
-                <li><strong>Mask:</strong> Capa 3 (On viuen els Enemics).</li>
-            </ul>
-            <p>Així, l'espasa "només té ulls" per als enemics i ignorarà completament les parets o la pròpia Aina.</p>
-        </section>
+            <h2>4. L'Acció del Combat: Animació i Codi</h2>
+            <p>Per a que l'Aina ataque, necessitem coordinar tres sistemes: la Tecla, l'Animació i la Detecció.</p>
 
+            <div class="highlight-section">
+                <h3>1. L'Input Map: El botó d'atacar</h3>
+                <p>Ves a <strong>Projecte > Configuració del Projecte > Input Map</strong>. Afegeix una acció anomenada
+                    <code>attack</code> i assigna-li la tecla <strong>Espai</strong> o <strong>al botó esquerre del
+                        ratolí </strong>.
+                </p>
+
+                <h3>2. L'Animació en l'AnimationPlayer</h3>
+                <p>A l'escena de l'Aina, selecciona l'<strong>AnimationPlayer</strong> i crea l'animació d'atacar.</p>
+                <p> Necesitaràs les animacions de la teva Aina per a que pugui atacar. A més de els sprites del moviment
+                    d'Anina, com vam fer pes a les animacions de correr, has d'afegir a la linea del temps el moviment
+                    de l'arma. </p>
+                <p> Per això, has de recol·locar el node del arma en cada frame d'atac de l'Aina i afegir els paràmetres
+                    que hages modificat a la linia del temps.</p>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <img src="../assets/images/aina/attack_front.png" alt="Atac Frontal"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Atac Front</p>
+                        <a href="../assets/images/aina/attack_front.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descarregar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../assets/images/aina/attack_back.png" alt="Atac Posterior"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Atac Back</p>
+                        <a href="../assets/images/aina/attack_back.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descarregar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../assets/images/aina/attack_left.png" alt="Atac Esquerra"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Atac Left</p>
+                        <a href="../assets/images/aina/attack_left.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descarregar</a>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="../assets/images/aina/attack_right.png" alt="Atac Dreta"
+                            style="max-width: 100px; border: 1px solid var(--glass-border); border-radius: 8px;">
+                        <p style="font-size: 0.8rem; margin: 0.5rem 0;">Aina Atac Right</p>
+                        <a href="../assets/images/aina/attack_right.png" download class="btn"
+                            style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">Descarregar</a>
+                    </div>
+                </div>
+
+                <p style="margin-top: 2rem;"> Recorda activar/desactivar les propietats <code>disabled</code> i
+                    <code>visible</code> del
+                    CollisionShape2D de l'arma a la línia de temps per a que només faça mal quan l'espasa es mou.
+                </p>
+
+                <h3>3. El Codi d'Atac</h3>
+                <p>En l'script de l'Aina, detectem la tecla i activem la condició en l'<strong>AnimationTree</strong>:
+                </p>
+                <pre><code class="language-gdscript"># Aina.gd
+                    func update_animation_parameters():
+	#Si direction es Vector.Zero, l'Aina esta parada, si no està en moviment
+	#S'actualitzen els parametres de l'arbre segons direction
+	if(direction==Vector2.ZERO):
+		weapon.visible=false
+		tree["parameters/conditions/idle"]=true
+		tree["parameters/conditions/running"]=false
+
+	else:
+		weapon.visible=false
+		tree["parameters/conditions/idle"]=false
+		tree["parameters/conditions/running"]=true
+		
+	if Input.is_action_just_pressed("attack"):
+		tree["parameters/conditions/attack"]=true
+		weapon.enable_collision()
+	else:
+		tree["parameters/conditions/attack"]=false
+	
+	if(direction!=Vector2.ZERO):
+		tree["parameters/idle/blend_position"]=direction
+		tree["parameters/run/blend_position"]=direction
+		tree["parameters/attack/blend_position"]=direction
+                </code></pre>
+            </div>
+            <p><strong>Truc Pro:</strong> Recorda que en l'AnimationTree, la transició de tornada des de l'atac cap a
+                "Idle" o "Run" ha de tindre activat l'<strong>Auto Advance</strong> (o <code>At End</code>) per a que
+                torne sola en acabar el swing.</p>
+        </section>
         <section class="card animate-on-load">
-            <h2>4. Codi de Combat: Disparant l'animació</h2>
-            <p>En el nostre script de l'Aina, hem de detectar quan el jugador vol atacar. Com que estem usant un
-                <strong>AnimationTree</strong>, no cridarem l'animació directament, sinó que canviarem un paràmetre.</p>
-            <pre><code class="language-gdscript"># Dins de _process o _physics_process
-if Input.is_action_just_pressed("attack"):
-    # Activem el "trigger" d'atac en l'AnimationTree
-    animation_tree.set("parameters/conditions/is_attacking", true)
-    # Bloquegem el moviment durant l'atac (opcional)
-    velocity = Vector2.ZERO
-</code></pre>
-            <p>És vital que en terminar l'animació d'atac, el <code>is_attacking</code> torne a ser <code>false</code>.
-                Això ho podem fer amb un <strong>AnimationPlayer Callback</strong> o simplement posant un keyframe al
-                final de l'animació que cride una funció de reset.</p>
-        </section>
+            <h2>6. Detecció i Dany al Monstre</h2>
+            <p>Ara que l'arma està a les mans de l'Aina, necessitem que els monstres "senten" el seu tall. En lloc de
+                que l'arma tinga una llista d'enemics, farem que siga el monstre qui pregunte a l'arma quant de dany fa.
+            </p>
 
+            <div class="highlight-section">
+                <h3>1. El mètode a l'Arma (Weapon.gd):</h3>
+                <pre><code class="language-gdscript"># Weapon.gd
+func get_damage():
+    return damage</code></pre>
+
+                <h3>2. La detecció al Monstre (Enemy.gd):</h3>
+                <p>Hem de crear un hitArea al monstre, amb capa de col·lisió 4 i connectem el senyal
+                    <code>area_entered</code> de l'Area2D del monstre (la seua Hurtbox) i hi afegim:
+                </p>
+                <pre><code class="language-gdscript">func _on_hurtbox_area_entered(area):
+    # Si l'area que ens toca té el mètode get_damage...
+    if area.has_method("get_damage"):
+        var dany_rebut = area.get_damage()
+        vida -= dany_rebut
+        print("Monstre ferit! Dany: ", dany_rebut)
+        
+        if vida <= 0:
+            die()
+
+func die():
+    # El monstre desapareix del joc
+    queue_free()</code></pre>
+            </div>
+            <p>Aquest sistema és molt flexible: si demà creem una llança o una destral, només han de tindre el mètode
+                <code>get_damage()</code> i el monstre les reconeixerà automàticament.
+            </p>
+        </section>
         <section class="card animate-on-load task-box">
             <h3>🛠️ Tasca Pràctica 7: El Teu Primer Colp</h3>
-            <p><strong>Objectiu:</strong> Implementar un atac funcional que active la seua hitbox només durant el swing.
-            </p>
+            <p><strong>Objectiu:</strong> Implementar un atac funcional que reste vida al monstre.</p>
             <ol>
-                <li><strong>Escena Weapon:</strong> Crea l'escena <code>Weapon</code> amb un Area2D i ficala com a filla
-                    de l'Aina.</li>
-                <li><strong>Hitbox Sincronitzada:</strong> Selecciona l'animació d'atac en l'AnimationPlayer i crea la
-                    línia de temps per a la propietat <code>disabled</code> del CollisionShape2D.</li>
-                <li><strong>Programació:</strong> Afegeix el botó d'atac a l'Input Map ("attack" -> Tecla Espai o C) i
-                    fes que l'Aina execute l'animació.</li>
-                <li><strong>Visualització:</strong> Activa <strong>Debug > Visible Collision Shapes</strong> per a
-                    comprovar que la zona blava de l'espasa només apareix durant el colp.</li>
+                <li><strong>Configuració:</strong> Agrega "attack" al teu Input Map.</li>
+                <li><strong>Animacions:</strong>Afig les animacions d'attack a l'Aina, incloent l'arma.</li>
+                <li><strong>Codi de l'Arma:</strong> Fica el codi necessari per a canvia la textura, ajustar la
+                    col·lisió i el dany.</li>
+                <li><strong>Lògica del Monstre:</strong> Connecta el senyal per a que el monstre reste vida en detectar
+                    l'àrea de l'arma.</li>
+                <li><strong>Sincronització:</strong> Edita l'animació per a que la col·lisió de l'arma s'active i es
+                    desactive correctament.</li>
             </ol>
-            <p><strong>Entrega:</strong> Vídeo curt del Debug o el teu projecte actualitzat a Aules.</p>
+            <p><strong>Entrega:</strong> El teu projecte comprimit a Aules</p>
         </section>
 
         <footer class="footer">
